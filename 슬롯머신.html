@@ -155,9 +155,18 @@
     let isSpinning = false;
     let remainingSpins = 0;
 
+    function generatePlayerId(length = 7) {
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      let id = '';
+      for (let i = 0; i < length; i++) {
+        id += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      return id;
+    }
+    
     let playerId = localStorage.getItem('playerId');
     if (!playerId) {
-      playerId = Math.random().toString().slice(2, 9);
+      playerId = generatePlayerId();
       localStorage.setItem('playerId', playerId);
     }
     playerIdText.textContent = playerId;
