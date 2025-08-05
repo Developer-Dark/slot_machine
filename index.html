@@ -134,11 +134,11 @@
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyDcxmtA5tGUf2qM9bVjTqiTmzKGpu8v247Z9SXYlMiZNCM-igYik1rEr9fjXgUDPp7wA/exec';
     const symbols = ['♣', '♦', '♥', '7', '♠'];
     const winRates = {
-      '♣': 0.252,    // 25.2%
-      '♦': 0.0762,   // 7.62%
-      '♥': 0.028,    // 2.8%
-      '7': 0.00377,  // 0.377%
-      '♠': 0.00003   // 0.003% 
+      '♣': 0.8232,
+      '♦': 0.1249,
+      '♥': 0.0459,
+      '7': 0.00618,
+      '♠': 0.00004918
     };
 
     const slotEls = [
@@ -220,7 +220,7 @@
       resultLabel.style.textShadow = '0 0 10px white';
 
       let s1, s2, s3;
-      if (Math.random() < 0.3) {
+      if (Math.random() < 0.5) {
         s1 = s2 = s3 = pickWeightedSymbol();
       } else {
         do {
