@@ -134,10 +134,10 @@
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzy_vS1mHaLfj3DinkFxR3i9azJlYC8AOecbaEBmZMmYkP1LYvOalWyMILjgoyCgAou2A/exec';
     const symbols = ['♣', '♦', '♥', '7', '♠'];
     const winRates = {
-      '♣': 0.45,   // 49%
-      '♦': 0.30,   // 25%
-      '♥': 0.20,   // 10.2%
-      '7': 0.049,  // 5.7%
+      '♣': 0.45,   // 45%
+      '♦': 0.30,   // 30%
+      '♥': 0.20,   // 20%
+      '7': 0.049,  // 4.9%
       '♠': 0.001   // 0.1%
     };
 
@@ -275,7 +275,7 @@
       setTimeout(() => {
         isSpinning = false;
         spinBtn.disabled = remainingSpins <= 0;
-      }, 500);
+      }, 700);
     }
 
     function addToHistory(result, isWin) {
