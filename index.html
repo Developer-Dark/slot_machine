@@ -258,7 +258,7 @@
       slotEls[0].textContent = s1;
       slotEls[1].textContent = s2;
       slotEls[2].textContent = s3;
-
+    
       if (s1 === s2 && s2 === s3) {
         resultLabel.style.color = 'gold';
         resultLabel.style.textShadow = '0 0 10px gold';
@@ -268,10 +268,14 @@
         resultLabel.style.textShadow = '0 0 10px white';
         slotEls.forEach(el => el.classList.remove('highlight'));
       }
-
+    
       resultLabel.textContent = rewardText;
       addToHistory(result, s1 === s2 && s2 === s3);
-      isSpinning = false;
+
+      setTimeout(() => {
+        isSpinning = false;
+        spinBtn.disabled = remainingSpins <= 0;
+      }, 500);
     }
 
     function addToHistory(result, isWin) {
