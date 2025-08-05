@@ -213,7 +213,7 @@
       isSpinning = true;
       remainingSpins--;
       spinCountText.textContent = remainingSpins;
-      spinBtn.disabled = remainingSpins <= 0;
+      spinBtn.disabled
 
       resultLabel.textContent = '🎰 슬롯 머신 🎰';
       resultLabel.style.color = 'white';
@@ -274,6 +274,7 @@
 
       setTimeout(() => {
         isSpinning = false;
+        spinBtn.enabled = remainingSpins > 0;
         spinBtn.disabled = remainingSpins <= 0;
       }, 700);
     }
