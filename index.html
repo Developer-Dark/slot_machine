@@ -245,7 +245,7 @@
       let spins = 0;
       const interval = setInterval(() => {
         slotEls.forEach(el => el.textContent = randomSymbol());
-        if (++spins >= 60) {
+        if (++spins >= 100) {
           clearInterval(interval);
           showFinalResult(s1, s2, s3, result, rewardText);
         }
