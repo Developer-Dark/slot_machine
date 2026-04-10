@@ -1,72 +1,76 @@
 :root {
-  --bg: #f2f4f6;
-  --card: #ffffff;
-  --blue: #3182f6;
-  --text: #191f28;
-  --sub-text: #4e5968;
-  --border: #eaebef;
+  --bg: #0f1012;      /* 깊은 블랙 */
+  --card: #1c1d21;    /* 다크 그레이 카드 */
+  --blue: #3182f6;    /* 토스 블루 */
+  --text: #f9fafb;    /* 밝은 텍스트 */
+  --sub-text: #8b949e;/* 흐린 텍스트 */
+  --border: #2c2d31;  /* 다크 테두리 */
+  --inner-bg: #111214;
 }
 
 body {
   background: var(--bg); color: var(--text); margin: 0;
   font-family: -apple-system, sans-serif; touch-action: manipulation;
+  overflow-x: hidden;
 }
 
 .app { width: 100%; max-width: 400px; margin: 0 auto; padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 12px; }
 
-.header h1 { font-size: 24px; margin: 20px 0 5px; }
+.header h1 { font-size: 24px; margin: 20px 0 5px; font-weight: 800; }
 .header p { color: var(--sub-text); margin: 0 0 10px; font-size: 15px; }
 
-.card { background: var(--card); border-radius: 24px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.02); }
+.card { background: var(--card); border-radius: 24px; padding: 22px; border: 1px solid var(--border); box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
 
-/* 슬롯 핵심 엔진 */
-#result-text { font-weight: 700; margin-bottom: 15px; color: var(--blue); min-height: 20px; }
-.slots { display: flex; gap: 10px; justify-content: center; margin-bottom: 20px; }
+/* 슬롯 디자인 */
+#result-text { font-weight: 700; margin-bottom: 18px; color: var(--blue); min-height: 22px; font-size: 18px; text-align: center; }
+.slots { display: flex; gap: 10px; justify-content: center; margin-bottom: 22px; }
 .slot { 
-  width: 80px; height: 100px; background: #f9fafb; border-radius: 16px; 
+  width: 85px; height: 110px; background: var(--inner-bg); border-radius: 18px; 
   overflow: hidden; position: relative; border: 1px solid var(--border);
 }
-.reel { position: absolute; width: 100%; top: 0; }
-.symbol { height: 100px; display: flex; align-items: center; justify-content: center; font-size: 40px; }
+.reel { position: absolute; width: 100%; top: 0; left: 0; will-change: transform; }
+.symbol { height: 110px; display: flex; align-items: center; justify-content: center; font-size: 45px; }
 
 /* 버튼 */
 #spin-btn { 
-  width: 100%; padding: 18px; border: none; border-radius: 16px; 
+  width: 100%; padding: 18px; border: none; border-radius: 18px; 
   background: var(--blue); color: #fff; font-size: 17px; font-weight: 700; cursor: pointer;
+  transition: transform 0.1s, opacity 0.2s;
 }
-#spin-btn:disabled { background: #e6e8eb; color: #b0b8c1; }
+#spin-btn:active { transform: scale(0.97); }
+#spin-btn:disabled { background: #2c2d31; color: #4e5968; cursor: not-allowed; }
 
 /* 레이아웃 구성 */
 .info-row { display: flex; gap: 12px; }
-.half-card { flex: 1; display: flex; flex-direction: column; gap: 4px; }
-.label { font-size: 13px; color: var(--sub-text); }
+.half-card { flex: 1; display: flex; flex-direction: column; gap: 6px; }
+.label { font-size: 13px; color: var(--sub-text); font-weight: 600; }
 .id-box { display: flex; justify-content: space-between; align-items: center; font-family: monospace; }
-.text-btn { background: none; border: none; color: var(--blue); font-weight: 600; cursor: pointer; padding: 0; }
+.text-btn { background: none; border: none; color: var(--blue); font-weight: 600; cursor: pointer; padding: 0; font-size: 14px; }
 
 /* 통계 */
 .stats-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-.stats-top h3 { font-size: 16px; margin: 0; }
-.stats-box { display: flex; justify-content: space-between; background: #f9fafb; padding: 15px; border-radius: 16px; }
-.stat { font-size: 14px; }
+.stats-top h3 { font-size: 16px; margin: 0; color: var(--sub-text); }
+.stats-box { display: flex; justify-content: space-between; background: var(--inner-bg); padding: 16px; border-radius: 18px; border: 1px solid var(--border); }
+.stat { font-size: 14px; color: var(--sub-text); }
+.stat b { color: var(--text); margin-left: 2px; }
 
 /* 모달 & 스크롤바 */
-.modal { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 100; display: flex; align-items: flex-end; }
+.modal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 100; display: flex; align-items: flex-end; }
 .hidden { display: none; }
-.modal-content { background: #fff; width: 100%; border-radius: 24px 24px 0 0; padding: 25px; box-sizing: border-box; }
-.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-.close-btn { background: #f2f4f6; border: none; font-size: 20px; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; }
+.modal-content { background: var(--card); width: 100%; border-radius: 30px 30px 0 0; padding: 30px 24px; box-sizing: border-box; border-top: 1px solid var(--border); }
+.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.close-btn { background: #2c2d31; color: var(--text); border: none; font-size: 20px; border-radius: 50%; width: 35px; height: 35px; cursor: pointer; }
 
-.history-list { max-height: 300px; overflow-y: auto; }
-.history-list::-webkit-scrollbar { width: 5px; }
-.history-list::-webkit-scrollbar-thumb { background: #d1d6db; border-radius: 10px; }
+.history-list { max-height: 350px; overflow-y: auto; padding-right: 5px; }
+.history-list::-webkit-scrollbar { width: 4px; }
+.history-list::-webkit-scrollbar-thumb { background: #3e4046; border-radius: 10px; }
 
 /* 당첨 효과 */
 .win-overlay { position: fixed; inset: 0; transition: 0.5s; pointer-events: none; z-index: 50; }
-body.celebrate .win-overlay { background: rgba(0,0,0,0.7); }
-body.celebrate .main-card { z-index: 60; position: relative; }
+body.celebrate .win-overlay { background: rgba(49, 130, 246, 0.15); }
 
 @keyframes jackpot-glow {
-  from { text-shadow: 0 0 10px #fff, 0 0 20px var(--blue); transform: scale(1); }
-  to { text-shadow: 0 0 20px #fff, 0 0 40px var(--blue); transform: scale(1.1); }
+  from { text-shadow: 0 0 10px #fff, 0 0 30px var(--blue); transform: scale(1); }
+  to { text-shadow: 0 0 20px #fff, 0 0 50px var(--blue); transform: scale(1.15); }
 }
 .jackpot-active .symbol { animation: jackpot-glow 0.4s infinite alternate; }
