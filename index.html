@@ -8,62 +8,56 @@
 </head>
 <body>
   <div class="app">
-    <div class="machine-header">SYSTEM STATUS: ACTIVE</div>
+    <div class="top-bar">
+      <div class="id-section">
+        <span class="label">ID</span>
+        <strong id="playerIdText">---</strong>
+        <button id="copyBtn">복사</button>
+      </div>
+      <div class="spin-status">
+        SPINS : <span id="spinCountText">0</span>
+      </div>
+    </div>
 
-    <div class="card main" id="main-card">
-      <h2 id="result">슬롯 머신</h2>
+    <div class="card main">
+      <h2 id="result">SLOT MACHINE</h2>
       <div class="slots">
         <div class="slot"><div class="reel" id="reel1"></div></div>
         <div class="slot"><div class="reel" id="reel2"></div></div>
         <div class="slot"><div class="reel" id="reel3"></div></div>
       </div>
+      
       <div class="button-group">
-        <button id="spin-btn" class="wave-btn" disabled>데이터 불러오는 중...</button>
+        <button id="spin-btn" class="wave-btn" disabled>SPIN</button>
+        <button id="history-btn" class="wave-btn secondary">HISTORY</button>
       </div>
     </div>
 
-    <div class="stats-area">
-      <div class="info-bar">
-        <div class="info-item">
-          <span class="label">USER ID</span>
-          <div class="id-wrapper">
-            <strong id="playerIdText">---</strong>
-            <button id="copyBtn" class="mini-action">복사</button>
-          </div>
+    <div class="stats-card">
+      <div class="stats-header">📊 SYSTEM MONITOR</div>
+      <div class="stats-grid">
+        <div class="stat-item">
+          <span class="label">기대 RTP</span>
+          <span class="value">98.5%</span>
         </div>
-        <div class="info-item">
-          <span class="label">SPINS</span>
-          <strong id="spinCountText">-</strong>
+        <div class="stat-item">
+          <span class="label">실제 RTP</span>
+          <span class="value highlight" id="actualRtp">0%</span>
         </div>
-      </div>
-
-      <div class="stats-card">
-        <div class="stats-grid">
-          <div class="stat-item">
-            <span class="label">기대 RTP</span>
-            <span class="value">98.5%</span>
-          </div>
-          <div class="stat-item">
-            <span class="label">실제 RTP</span>
-            <span class="value" id="actualRtp">0%</span>
-          </div>
-          <div class="stat-item">
-            <span class="label">RTP 오차</span>
-            <span class="value" id="rtpDiff">0%</span>
-          </div>
+        <div class="stat-item">
+          <span class="label">RTP 오차</span>
+          <span class="value" id="rtpDiff">0%</span>
         </div>
       </div>
-
-      <div class="footer-btns">
-        <button id="history-btn" class="wave-btn secondary">기록 보기</button>
-      </div>
+      <div id="probList" class="mini-prob-list"></div>
     </div>
   </div>
 
   <div id="historyModal" class="modal hidden">
     <div class="modal-content">
-      <div class="modal-header">기록 <button id="closeHistory">×</button></div>
+      <div class="modal-header">HISTORY LOG</div>
       <div class="history-list" id="history"></div>
+      <button id="closeHistory" class="wave-btn secondary">CLOSE</button>
     </div>
   </div>
 
