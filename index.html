@@ -8,7 +8,7 @@
 </head>
 <body>
   <div class="app">
-    <div class="machine-header">ANALYSIS MODE: ACTIVE</div>
+    <div class="machine-header">SYSTEM STATUS: ACTIVE</div>
 
     <div class="card main" id="main-card">
       <h2 id="result">슬롯 머신</h2>
@@ -17,7 +17,6 @@
         <div class="slot"><div class="reel" id="reel2"></div></div>
         <div class="slot"><div class="reel" id="reel3"></div></div>
       </div>
-      
       <div class="button-group">
         <button id="spin-btn" class="wave-btn" disabled>데이터 불러오는 중...</button>
       </div>
@@ -27,9 +26,9 @@
       <div class="info-bar">
         <div class="info-item">
           <span class="label">USER ID</span>
-          <div class="id-box">
+          <div class="id-wrapper">
             <strong id="playerIdText">---</strong>
-            <button id="copyBtn" class="sub-action">복사</button>
+            <button id="copyBtn" class="mini-action">복사</button>
           </div>
         </div>
         <div class="info-item">
@@ -46,24 +45,25 @@
           </div>
           <div class="stat-item">
             <span class="label">실제 RTP</span>
-            <span class="value highlight" id="actualRtp">0.0%</span>
+            <span class="value" id="actualRtp">0%</span>
           </div>
           <div class="stat-item">
             <span class="label">RTP 오차</span>
-            <span class="value" id="rtpDiff">0.0%</span>
+            <span class="value" id="rtpDiff">0%</span>
           </div>
         </div>
       </div>
 
-      <button id="history-btn" class="wave-btn secondary">HISTORY LOG</button>
+      <div class="footer-btns">
+        <button id="history-btn" class="wave-btn secondary">HISTORY LOG</button>
+      </div>
     </div>
   </div>
 
   <div id="historyModal" class="modal hidden">
     <div class="modal-content">
-      <div class="modal-header">분석 기록</div>
+      <div class="modal-header">분석 기록 <button id="closeHistory">×</button></div>
       <div class="history-list" id="history"></div>
-      <button id="closeHistory" class="wave-btn secondary">닫기</button>
     </div>
   </div>
 
