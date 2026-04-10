@@ -3,57 +3,57 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>슬롯 머신 시뮬레이터</title>
+  <title>CRYPTO SLOT SIMULATOR</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div id="win-overlay" class="win-overlay"></div>
 
   <div class="app">
-    <header class="status-bar">
-      <div class="user-info">
-        <span class="label">ACCOUNT</span>
-        <strong id="playerIdText"></strong>
+    <header class="wallet-bar">
+      <div class="balance-info">
+        <span class="label">MY BALANCE</span>
+        <strong id="balanceText">0.00</strong> <span class="unit">CREDIT</span>
       </div>
-      <div class="spin-info">
-        <span class="label">REMAINING</span>
-        <strong><span id="spinCountText">0</span>회</strong>
+      <div class="id-info">
+        <span id="playerIdText"></span>
       </div>
-    </header>
-
-    <header class="header">
-      <h1>실시간 통계 분석</h1>
-      <p>슬롯 머신의 RTP를 실시간으로 측정합니다</p>
     </header>
 
     <div class="card main-card" id="main-card">
-      <div id="result-text">스핀을 시작하세요</div>
+      <div id="status-tag">SYSTEM READY</div>
       <div class="slots">
         <div class="slot"><div class="reel" id="reel1"></div></div>
         <div class="slot"><div class="reel" id="reel2"></div></div>
         <div class="slot"><div class="reel" id="reel3"></div></div>
       </div>
-      <button id="spin-btn" disabled>연결 중...</button>
+      
+      <div class="bet-control">
+        <div class="bet-info">
+          <span class="label">SPIN COST</span>
+          <strong>1.00 CREDIT</strong>
+        </div>
+        <button id="spin-btn" disabled>LOADING...</button>
+      </div>
     </div>
 
     <div class="card stats-card">
       <div class="stats-top">
-        <h3>RTP 통계 보고</h3>
-        <button id="history-btn" class="text-btn">기록 보기</button>
+        <h3>TRADE HISTORY</h3>
+        <button id="history-btn" class="text-btn">LOGS</button>
       </div>
-      <div class="stats-grid">
-        <div class="stat-item">목표 <b>92%</b></div>
-        <div class="stat-item">실제 <b id="actualRtp">0%</b></div>
-        <div class="stat-item">오차 <b id="rtpDiff">0%</b></div>
+      <div class="stats-box">
+        <div class="stat"><span class="label">REMAINING SPINS</span> <b id="spinCountText">0</b></div>
+        <div class="stat"><span class="label">WIN RATE</span> <b id="actualRtp">0%</b></div>
       </div>
-      <button id="copyBtn" class="sub-btn">계정 ID 복사하기</button>
     </div>
+    <button id="copyBtn" class="id-copy-btn">COPY WALLET ID</button>
   </div>
 
   <div id="historyModal" class="modal hidden">
     <div class="modal-content">
       <div class="modal-header">
-        <h2>당첨 히스토리</h2>
+        <h2>TRANSACTION LOG</h2>
         <button id="closeHistory" class="close-btn">&times;</button>
       </div>
       <div id="history" class="history-list"></div>
