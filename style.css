@@ -1,10 +1,10 @@
 :root {
-  --bg: #0f1012;      /* 깊은 블랙 */
-  --card: #1c1d21;    /* 다크 그레이 카드 */
-  --blue: #3182f6;    /* 토스 블루 */
-  --text: #f9fafb;    /* 밝은 텍스트 */
-  --sub-text: #8b949e;/* 흐린 텍스트 */
-  --border: #2c2d31;  /* 다크 테두리 */
+  --bg: #0f1012;
+  --card: #1c1d21;
+  --blue: #3182f6;
+  --text: #f9fafb;
+  --sub-text: #8b949e;
+  --border: #2c2d31;
   --inner-bg: #111214;
 }
 
@@ -21,40 +21,32 @@ body {
 
 .card { background: var(--card); border-radius: 24px; padding: 22px; border: 1px solid var(--border); box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
 
-/* 슬롯 디자인 */
 #result-text { font-weight: 700; margin-bottom: 18px; color: var(--blue); min-height: 22px; font-size: 18px; text-align: center; }
 .slots { display: flex; gap: 10px; justify-content: center; margin-bottom: 22px; }
-.slot { 
-  width: 85px; height: 110px; background: var(--inner-bg); border-radius: 18px; 
-  overflow: hidden; position: relative; border: 1px solid var(--border);
-}
+.slot { width: 85px; height: 110px; background: var(--inner-bg); border-radius: 18px; overflow: hidden; position: relative; border: 1px solid var(--border); }
 .reel { position: absolute; width: 100%; top: 0; left: 0; will-change: transform; }
 .symbol { height: 110px; display: flex; align-items: center; justify-content: center; font-size: 45px; }
 
-/* 버튼 */
 #spin-btn { 
   width: 100%; padding: 18px; border: none; border-radius: 18px; 
   background: var(--blue); color: #fff; font-size: 17px; font-weight: 700; cursor: pointer;
-  transition: transform 0.1s, opacity 0.2s;
+  transition: transform 0.1s;
 }
 #spin-btn:active { transform: scale(0.97); }
 #spin-btn:disabled { background: #2c2d31; color: #4e5968; cursor: not-allowed; }
 
-/* 레이아웃 구성 */
 .info-row { display: flex; gap: 12px; }
 .half-card { flex: 1; display: flex; flex-direction: column; gap: 6px; }
 .label { font-size: 13px; color: var(--sub-text); font-weight: 600; }
 .id-box { display: flex; justify-content: space-between; align-items: center; font-family: monospace; }
 .text-btn { background: none; border: none; color: var(--blue); font-weight: 600; cursor: pointer; padding: 0; font-size: 14px; }
 
-/* 통계 */
 .stats-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
 .stats-top h3 { font-size: 16px; margin: 0; color: var(--sub-text); }
 .stats-box { display: flex; justify-content: space-between; background: var(--inner-bg); padding: 16px; border-radius: 18px; border: 1px solid var(--border); }
 .stat { font-size: 14px; color: var(--sub-text); }
 .stat b { color: var(--text); margin-left: 2px; }
 
-/* 모달 & 스크롤바 */
 .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 100; display: flex; align-items: flex-end; }
 .hidden { display: none; }
 .modal-content { background: var(--card); width: 100%; border-radius: 30px 30px 0 0; padding: 30px 24px; box-sizing: border-box; border-top: 1px solid var(--border); }
@@ -65,7 +57,6 @@ body {
 .history-list::-webkit-scrollbar { width: 4px; }
 .history-list::-webkit-scrollbar-thumb { background: #3e4046; border-radius: 10px; }
 
-/* 당첨 효과 */
 .win-overlay { position: fixed; inset: 0; transition: 0.5s; pointer-events: none; z-index: 50; }
 body.celebrate .win-overlay { background: rgba(49, 130, 246, 0.15); }
 
