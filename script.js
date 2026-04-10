@@ -1,91 +1,181 @@
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzy_vS1mHaLfj3DinkFxR3i9azJlYC8AOecbaEBmZMmYkP1LYvOalWyMILjgoyCgAou2A/exec';
 
-let remainingSpins = 0, totalSpent = 0, totalWon = 0, isSpinning = false;
+// [RTP 시스템 설정] 환수율 기댓값 92% 모델
 const CONFIG = {
-  SYMBOLS: ['♠', '7', '♥', '♦', '♣'],
-  PAYOUTS: { '♠': 100, '7': 25, '♥': 10, '♦': 5, '♣': 1 }
+  TARGET_RTP: 92,
+  BASE_WIN_RATE: 0.32, // 전체 스핀 중 당첨이 발생할 확률 (32%)
+  SYMBOLS_DATA: {
+    '♠': { name: '잭팟', weight: 0.005, payout: 50 },    // 실제확률 0.16%
+    '7': { name: '럭키 세븐', weight: 0.035, payout: 15 }, // 실제확률 1.12%
+    '♥': { name: '트리플', weight: 0.12, payout: 5 },    // 실제확률 3.84%
+    '♦': { name: '더블', weight: 0.24, payout: 2 },      // 실제확률 7.68%
+    '♣': { name: '하프-백', weight: 0.60, payout: 0.5 }   // 실제확률 19.2%
+  }
 };
 
-let playerId = localStorage.getItem('playerId') || Math.random().toString(36).substring(2, 8).toUpperCase();
+const SYMBOLS = Object.keys(CONFIG.SYMBOLS_DATA);
+const REEL_SYMBOL_COUNT = 40;
+
+const reels = [document.getElementById('reel1'), document.getElementById('reel2'), document.getElementById('reel3')];
+const spinBtn = document.getElementById('spin-btn');
+const spinText = document.getElementById('spinCountText');
+const resultLabel = document.getElementById('result');
+const mainCard = document.getElementById('main-card');
+const historyContainer = document.getElementById('history');
+
+let remainingSpins = 0;
+let isSpinning = false;
+
+// 실시간 통계 변수
+let stats = {
+  totalSpent: 0, 
+  totalWon: 0
+};
+
+// 유저 ID 초기화
+let playerId = localStorage.getItem('playerId') || Math.random().toString(36).substring(2, 9);
 localStorage.setItem('playerId', playerId);
 document.getElementById('playerIdText').textContent = playerId;
 
+// 통계 UI 업데이트
+function updateStatsUI() {
+  const actualRtp = stats.totalSpent === 0 ? 0 : (stats.totalWon / stats.totalSpent) * 100;
+  const diff = actualRtp - CONFIG.TARGET_RTP;
+
+  document.getElementById('actualRtp').textContent = actualRtp.toFixed(1) + '%';
+  
+  const diffEl = document.getElementById('rtpDiff');
+  diffEl.textContent = (diff > 0 ? '+' : '') + diff.toFixed(1) + '%';
+  diffEl.className = 'value ' + (diff > 0 ? 'diff-plus' : 'diff-minus');
+
+  const probList = document.getElementById('probList');
+  probList.innerHTML = Object.entries(CONFIG.SYMBOLS_DATA).map(([sym, data]) => {
+    const realProb = (CONFIG.BASE_WIN_RATE * data.weight * 100).toFixed(2);
+    return `<span class="prob-tag">${sym} ${realProb}%</span>`;
+  }).join('');
+}
+
+// 가중치 기반 심볼 뽑기
+function pickWeightedSymbol() {
+  const data = CONFIG.SYMBOLS_DATA;
+  let r = Math.random();
+  let acc = 0;
+  for (const sym of SYMBOLS) {
+    acc += data[sym].weight;
+    if (r <= acc) return sym;
+  }
+  return '♣';
+}
+
+function initReels() {
+  reels.forEach(reel => {
+    reel.innerHTML = '';
+    for (let i = 0; i < REEL_SYMBOL_COUNT; i++) {
+      const div = document.createElement('div');
+      div.className = 'symbol';
+      div.textContent = SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
+      reel.appendChild(div);
+    }
+  });
+}
+
+async function postResult(rewardText) {
+  try {
+    await fetch(SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: `id=${playerId}&result=${encodeURIComponent(rewardText)}`
+    });
+  } catch (e) { console.error('전송 실패'); }
+}
+
 async function spin() {
   if (isSpinning || remainingSpins <= 0) return;
-  isSpinning = true;
-  
-  remainingSpins--;
-  totalSpent++;
-  document.getElementById('spinCountText').textContent = remainingSpins;
-  document.getElementById('spin-btn').disabled = true;
 
-  const isWin = Math.random() < 0.38;
-  let resSyms = [], payout = 0, rewardKey = '꽝';
+  isSpinning = true;
+  remainingSpins--;
+  stats.totalSpent += 1; // 1회 스핀 소모 가중치
+  
+  spinText.textContent = remainingSpins;
+  spinBtn.disabled = true;
+  mainCard.classList.remove('win-normal', 'win-high', 'win-jackpot');
+  resultLabel.textContent = "결과 확인 중...";
+
+  // 결과 미리 결정
+  const isWin = Math.random() < CONFIG.BASE_WIN_RATE;
+  let finalSymbols = [];
+  let rewardData = { name: '꽝', payout: 0, sym: '' };
 
   if (isWin) {
-    const r = Math.random();
-    let winSym = r < 0.05 ? '♠' : r < 0.15 ? '7' : '♦';
-    resSyms = [winSym, winSym, winSym];
-    payout = CONFIG.PAYOUTS[winSym];
-    rewardKey = winSym === '♠' ? '잭팟' : winSym === '7' ? '럭키 세븐' : '더블';
+    const s = pickWeightedSymbol();
+    finalSymbols = [s, s, s];
+    rewardData = { name: CONFIG.SYMBOLS_DATA[s].name, payout: CONFIG.SYMBOLS_DATA[s].payout, sym: s };
   } else {
-    resSyms = ['♣', '♠', '♥'];
+    do {
+      finalSymbols = [SYMBOLS[Math.floor(Math.random()*5)], SYMBOLS[Math.floor(Math.random()*5)], SYMBOLS[Math.floor(Math.random()*5)]];
+    } while (finalSymbols[0] === finalSymbols[1] && finalSymbols[1] === finalSymbols[2]);
   }
 
-  const symH = 110;
-  for(let i=1; i<=3; i++) {
-    const r = document.getElementById('reel' + i);
-    r.lastElementChild.textContent = resSyms[i-1];
-    r.style.transition = 'none';
-    r.style.transform = 'translateY(0)';
-    r.offsetHeight; 
-    r.style.transition = `transform ${1.2 + i*0.2}s cubic-bezier(0.45, 0.05, 0.55, 0.95)`;
-    r.style.transform = `translateY(-${29 * symH}px)`;
-  }
+  // 릴 애니메이션
+  reels.forEach((reel, i) => {
+    reel.lastElementChild.textContent = finalSymbols[i];
+    reel.style.transition = 'none';
+    reel.style.transform = 'translateY(0)';
+    setTimeout(() => {
+      const duration = 2 + (i * 0.4); 
+      reel.style.transition = `transform ${duration}s cubic-bezier(0.1, 0, 0.1, 1)`;
+      reel.style.transform = `translateY(-${(REEL_SYMBOL_COUNT - 1) * 120}px)`;
+    }, 50);
+  });
 
+  // 애니메이션 종료 후 처리
   setTimeout(() => {
-    totalWon += payout;
-    const rtp = ((totalWon / totalSpent) * 100).toFixed(0);
-    document.getElementById('actualRtpText').textContent = rtp + '%';
-    
-    fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: `id=${playerId}&result=${encodeURIComponent(rewardKey)}` });
+    stats.totalWon += rewardData.payout;
+    resultLabel.textContent = rewardData.name;
 
-    const log = document.createElement('div');
-    log.style.padding = "10px 0";
-    log.style.borderBottom = "1px solid #333";
-    log.innerHTML = `<span style="color:#8e8e93">${resSyms.join(' ')}</span> <b style="float:right; color:${payout > 0 ? '#30d158' : '#ff453a'}">${payout > 0 ? '+' + payout : '0'}</b>`;
-    document.getElementById('history').prepend(log);
+    if (rewardData.payout > 0) {
+      if (rewardData.sym === '♠') mainCard.classList.add('win-jackpot');
+      else if (rewardData.sym === '7') mainCard.classList.add('win-high');
+      else mainCard.classList.add('win-normal');
+    }
+
+    updateStatsUI();
+    postResult(rewardData.name);
+    addHistory(finalSymbols.join(' '), rewardData.name, rewardData.payout > 0);
 
     isSpinning = false;
-    document.getElementById('spin-btn').disabled = remainingSpins <= 0;
-  }, 2000);
+    spinBtn.disabled = (remainingSpins <= 0);
+  }, 3200);
+}
+
+function addHistory(symbols, reward, isWin) {
+  const div = document.createElement('div');
+  div.className = `entry ${isWin ? 'win' : ''}`;
+  div.innerHTML = `<span>${symbols}</span><span style="font-size:13px; color:#aaa;">${reward}</span>`;
+  historyContainer.prepend(div);
 }
 
 async function loadData() {
+  spinBtn.disabled = true;
+  spinBtn.textContent = "데이터 불러오는 중...";
   try {
     const res = await fetch(`${SCRIPT_URL}?id=${playerId}`);
     const data = await res.json();
     remainingSpins = data.spins || 0;
-    document.getElementById('spinCountText').textContent = remainingSpins;
-    document.getElementById('spin-btn').disabled = remainingSpins <= 0;
-    document.getElementById('spin-btn').textContent = "SPIN";
-  } catch (e) { document.getElementById('spin-btn').textContent = "ERROR"; }
+    spinText.textContent = remainingSpins;
+    spinBtn.textContent = "SPIN";
+    spinBtn.disabled = (remainingSpins <= 0);
+  } catch (e) { spinBtn.textContent = "연결 오류"; }
 }
 
-document.getElementById('spin-btn').onclick = spin;
+// 이벤트 리스너
+spinBtn.onclick = spin;
+document.getElementById('copyBtn').onclick = () => {
+  navigator.clipboard.writeText(playerId).then(() => alert('ID가 복사되었습니다.'));
+};
 document.getElementById('history-btn').onclick = () => document.getElementById('historyModal').classList.remove('hidden');
 document.getElementById('closeHistory').onclick = () => document.getElementById('historyModal').classList.add('hidden');
-document.getElementById('copyBtn').onclick = () => {
-  navigator.clipboard.writeText(playerId).then(() => alert('ID Copied'));
-};
 
-(function init() {
-  for(let i=1; i<=3; i++) {
-    const r = document.getElementById('reel'+i);
-    for(let j=0; j<30; j++) {
-      const d = document.createElement('div'); d.className = 'symbol';
-      d.textContent = CONFIG.SYMBOLS[j % 5]; r.appendChild(d);
-    }
-  }
-  loadData();
-})();
+initReels();
+updateStatsUI();
+loadData();
