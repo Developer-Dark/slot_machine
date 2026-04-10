@@ -1,66 +1,49 @@
 :root {
-  --bg: #050505;
-  --card: #121212;
+  --bg: #0d0e10;
+  --card: #16181d;
   --blue: #3182f6;
-  --accent: #00ff88;
-  --text: #ffffff;
-  --sub: #707070;
-  --border: #222222;
+  --green: #00d5a0;
+  --text: #f9fafb;
+  --sub: #6b7684;
+  --border: #25282e;
 }
 
-body { 
-  background: var(--bg); color: var(--text); margin: 0; 
-  font-family: 'Inter', -apple-system, sans-serif; overflow: hidden;
-}
+body { background: var(--bg); color: var(--text); margin: 0; font-family: 'Inter', sans-serif; }
+.app { width: 100%; max-width: 420px; margin: 0 auto; padding: 15px; display: flex; flex-direction: column; gap: 12px; box-sizing: border-box; }
 
-.app { width: 100%; max-width: 420px; margin: 0 auto; padding: 15px; box-sizing: border-box; display: flex; flex-direction: column; gap: 15px; height: 100vh; }
+/* 헤더 상단바 */
+.monitor-header { display: flex; justify-content: space-between; padding: 10px 5px; font-size: 11px; font-weight: 700; color: var(--sub); }
+.status-group { display: flex; align-items: center; gap: 6px; }
+.dot-icon { width: 6px; height: 6px; background: var(--green); border-radius: 50%; box-shadow: 0 0 8px var(--green); animation: blink 1.5s infinite; }
+@keyframes blink { 50% { opacity: 0.3; } }
 
-/* 월렛 디자인 */
-.wallet-bar { display: flex; justify-content: space-between; padding: 20px 5px; border-bottom: 1px solid var(--border); }
-.label { display: block; font-size: 10px; color: var(--sub); font-weight: 800; margin-bottom: 4px; letter-spacing: 0.5px; }
-.balance-info strong { font-size: 26px; color: var(--accent); font-variant-numeric: tabular-nums; }
-.id-info { text-align: right; }
-#playerIdText { font-family: monospace; font-size: 13px; color: var(--text); }
+.card { background: var(--card); border-radius: 18px; padding: 18px; border: 1px solid var(--border); }
+.label { display: block; font-size: 10px; color: var(--sub); font-weight: 800; margin-bottom: 4px; }
 
-.card { background: var(--card); border-radius: 24px; padding: 24px; border: 1px solid var(--border); position: relative; }
+/* 그래프 카드 */
+.graph-card .card-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 12px; }
+.graph-card strong { font-size: 20px; color: var(--blue); }
+.chart-container { height: 100px; width: 100%; }
 
-/* 슬롯 디자인 */
-#status-tag { display: inline-block; background: #1a1a1a; padding: 5px 12px; border-radius: 8px; font-size: 11px; font-weight: 900; color: var(--accent); margin-bottom: 25px; border: 1px solid #333; }
-.slots { display: flex; gap: 10px; justify-content: center; margin-bottom: 30px; }
-.slot { width: 95px; height: 130px; background: #000; border-radius: 16px; overflow: hidden; position: relative; border: 1px solid #282828; box-shadow: inset 0 0 20px #000; }
-.reel { position: absolute; width: 100%; top: 0; }
-.symbol { height: 130px; display: flex; align-items: center; justify-content: center; font-size: 55px; filter: drop-shadow(0 0 5px rgba(255,255,255,0.1)); }
-
-/* 베팅 컨트롤 & 버튼 */
-.bet-control { display: flex; align-items: center; gap: 20px; border-top: 1px dashed #222; padding-top: 25px; }
-.bet-info strong { font-size: 18px; color: var(--text); }
+/* 슬롯 영역 */
+.slot-status { font-size: 12px; font-weight: 600; color: var(--sub); text-align: center; margin-bottom: 15px; }
+.slots { display: flex; gap: 8px; justify-content: center; margin-bottom: 20px; }
+.slot { width: 90px; height: 110px; background: #000; border-radius: 12px; overflow: hidden; position: relative; border: 1px solid #222; }
+.symbol { height: 110px; display: flex; align-items: center; justify-content: center; font-size: 50px; }
 
 #spin-btn { 
-  flex: 2; padding: 20px; border: none; border-radius: 18px; 
-  background: linear-gradient(135deg, #3182f6 0%, #1c64d1 100%); 
-  color: #fff; font-size: 18px; font-weight: 900; cursor: pointer;
-  box-shadow: 0 4px 15px rgba(49, 130, 246, 0.4); transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  width: 100%; padding: 16px; border: none; border-radius: 12px; 
+  background: var(--blue); color: #fff; font-size: 16px; font-weight: 700; cursor: pointer;
 }
-#spin-btn:not(:disabled):hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(49, 130, 246, 0.5); }
-#spin-btn:active { transform: scale(0.95); }
-#spin-btn:disabled { background: #222; color: #555; box-shadow: none; transform: none; }
+#spin-btn:disabled { background: #222; color: #444; }
 
-/* 통계 및 유틸 */
-.stats-top { display: flex; justify-content: space-between; margin-bottom: 15px; }
-.stats-box { display: flex; gap: 20px; background: #000; padding: 20px; border-radius: 16px; }
-.id-copy-btn { background: #1a1a1a; border: 1px solid var(--border); color: var(--sub); padding: 15px; border-radius: 15px; cursor: pointer; font-size: 13px; font-weight: 700; transition: 0.2s; }
-.id-copy-btn:active { background: #333; }
+/* 데이터 그리드 */
+.data-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; text-align: center; }
+.data-item b { display: block; margin-top: 5px; font-size: 15px; color: var(--text); }
+
+.footer-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.secondary-btn { background: #1e2127; border: 1px solid var(--border); color: var(--sub); padding: 12px; border-radius: 10px; font-weight: 600; font-size: 12px; cursor: pointer; }
 
 /* 효과 */
-.win-overlay { position: fixed; inset: 0; pointer-events: none; z-index: 50; transition: 0.6s ease; }
-body.jackpot-win .win-overlay { background: radial-gradient(circle, rgba(0, 255, 136, 0.2) 0%, rgba(0,0,0,0.85) 100%); }
-@keyframes glow { 
-  from { filter: drop-shadow(0 0 5px var(--accent)); transform: scale(1); } 
-  to { filter: drop-shadow(0 0 25px var(--accent)); transform: scale(1.1); } 
-}
-.jackpot-active .symbol { animation: glow 0.3s infinite alternate; }
-
-.modal { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 100; display: flex; align-items: flex-end; }
-.hidden { display: none; }
-.modal-content { background: #111; width: 100%; border-radius: 30px 30px 0 0; padding: 30px; border-top: 1px solid #333; }
-.text-btn { background: none; border: none; color: var(--blue); font-weight: 800; cursor: pointer; }
+.win-overlay { position: fixed; inset: 0; pointer-events: none; transition: 0.5s; z-index: 100; }
+body.jackpot-win .win-overlay { background: rgba(49, 130, 246, 0.15); border: 4px solid var(--blue); }
