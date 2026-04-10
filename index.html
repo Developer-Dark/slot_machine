@@ -2,293 +2,66 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>🎰 Slot Machine</title>
-  <style>
-    body {
-      background-color: #0E0E0E;
-      color: white;
-      font-family: 'Segoe UI', sans-serif;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-    }
-    #player-id {
-      position: absolute;
-      top: 10px;
-      left: 20px;
-      font-size: 1rem;
-      color: #ccc;
-    }
-    #spin-count {
-      position: absolute;
-      top: 10px;
-      right: 20px;
-      font-size: 1rem;
-      color: #ccc;
-    }
-    h1 {
-      font-size: 2rem;
-      color: white;
-      text-shadow: 0 0 10px white;
-      margin: 30px 0 10px;
-      text-align: center;
-    }
-    .main {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-    }
-    .slots {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      margin: 20px 0;
-    }
-    .slot {
-      width: 100px;
-      height: 150px;
-      font-size: 60px;
-      background-color: #1A1A1A;
-      border: 2px solid white;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      box-shadow: 0 0 5px white;
-    }
-    #spin-btn {
-      margin-top: 30px;
-      padding: 12px 40px;
-      background-color: #8c8caa;
-      border: none;
-      border-radius: 30px;
-      color: white;
-      font-size: 1.2rem;
-      cursor: pointer;
-      box-shadow: 0 4px 10px rgba(140, 140, 170, 0.6);
-      transition: transform 0.2s ease, background-color 0.3s ease, opacity 0.3s ease;
-    }
-    #spin-btn:hover:enabled {
-      transform: scale(1.05);
-      background-color: #80809C;
-    }
-    #spin-btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-    .history-wrapper {
-      display: flex;
-      justify-content: center;
-      padding: 10px;
-    }
-    .history {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      justify-content: center;
-      width: 1500px;
-      height: 70px;
-      padding: 5px;
-      overflow: hidden;
-      box-sizing: border-box;
-    }
-    .history .entry {
-      width: 50px;
-      height: 30px;
-      font-size: 18px;
-      border-radius: 4px;
-      background-color: black;
-      border: 1px solid gray;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .highlight {
-      color: gold;
-      border: 1px solid gold !important;
-      box-shadow: 0 0 5px gold;
-    }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>🎰 Data-Driven Slot Machine</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div id="player-id">ID : <span id="playerIdText">Loading...</span></div>
-  <div id="spin-count">↻ 남은 스핀 횟수 : <span id="spinCountText">0</span></div>
-  <h1 id="result">🎰 슬롯 머신 🎰</h1>
-  <div class="main">
-    <div class="slots">
-      <div class="slot" id="slot1">?</div>
-      <div class="slot" id="slot2">?</div>
-      <div class="slot" id="slot3">?</div>
+  <div id="win-overlay" class="win-overlay"></div>
+
+  <div class="app">
+    <div class="top-bar">
+      <div class="top-item id-row">
+        <span class="id-label">ID</span>
+        <strong id="playerIdText"></strong>
+        <button class="copy-btn" id="copyBtn">복사</button>
+      </div>
+      <div class="top-item" id="spinContainer">
+        남은 스핀 : <span id="spinCountText">-</span>
+      </div>
     </div>
-    <button id="spin-btn">SPIN</button>
+
+    <div class="card main" id="main-card">
+      <h2 id="result">슬롯 머신</h2>
+      <div class="slots">
+        <div class="slot"><div class="reel" id="reel1"></div></div>
+        <div class="slot"><div class="reel" id="reel2"></div></div>
+        <div class="slot"><div class="reel" id="reel3"></div></div>
+      </div>
+      <div class="button-group">
+        <button id="spin-btn" disabled>데이터 불러오는 중...</button>
+        <button id="history-btn">HISTORY</button>
+      </div>
+    </div>
+
+    <div class="stats-card">
+      <div class="stats-header">📊 실시간 시스템 상태</div>
+      <div class="stats-grid">
+        <div class="stat-item">
+          <span class="label">기대 환수율</span>
+          <span class="value" id="targetRtp">92%</span>
+        </div>
+        <div class="stat-item">
+          <span class="label">실제 환수율</span>
+          <span class="value" id="actualRtp">0%</span>
+        </div>
+        <div class="stat-item">
+          <span class="label">환수율 오차</span>
+          <span class="value" id="rtpDiff">0%</span>
+        </div>
+      </div>
+      <div class="prob-list" id="probList"></div>
+    </div>
   </div>
-  <div class="history-wrapper">
-    <div class="history" id="history"></div>
+
+  <div id="historyModal" class="modal hidden">
+    <div class="modal-content">
+      <div class="modal-header">히스토리</div>
+      <div class="history" id="history"></div>
+      <button id="closeHistory" class="modal-close-btn">닫기</button>
+    </div>
   </div>
 
-  <script>
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzy_vS1mHaLfj3DinkFxR3i9azJlYC8AOecbaEBmZMmYkP1LYvOalWyMILjgoyCgAou2A/exec';
-    const symbols = ['♣', '♦', '♥', '7', '♠'];
-    const winRates = {
-      '♣': 0.45,   // 45%
-      '♦': 0.30,   // 30%
-      '♥': 0.20,   // 20%
-      '7': 0.049,  // 4.9%
-      '♠': 0.001   // 0.1%
-    };
-
-    const slotEls = [
-      document.getElementById('slot1'),
-      document.getElementById('slot2'),
-      document.getElementById('slot3')
-    ];
-    const resultLabel = document.getElementById('result');
-    const history = document.getElementById('history');
-    const spinBtn = document.getElementById('spin-btn');
-    const playerIdText = document.getElementById('playerIdText');
-    const spinCountText = document.getElementById('spinCountText');
-
-    let isSpinning = false;
-    let remainingSpins = 0;
-
-    function generatePlayerId(length = 7) {
-      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-      let id = '';
-      for (let i = 0; i < length; i++) {
-        id += chars.charAt(Math.floor(Math.random() * chars.length));
-      }
-      return id;
-    }
-    
-    let playerId = localStorage.getItem('playerId');
-    if (!playerId) {
-      playerId = generatePlayerId();
-      localStorage.setItem('playerId', playerId);
-    }
-    playerIdText.textContent = playerId;
-
-    async function loadSpinCount() {
-      const res = await fetch(`${SCRIPT_URL}?id=${playerId}`);
-      const data = await res.json();
-      remainingSpins = data.spins || 0;
-      spinCountText.textContent = remainingSpins;
-      spinBtn.disabled = remainingSpins <= 0;
-    }
-
-    async function postResult(resultText) {
-      try {
-        await fetch(SCRIPT_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: `id=${playerId}&result=${encodeURIComponent(resultText)}`
-        });
-      } catch (e) {
-        console.error('Error posting result:', e);
-      }
-    }
-
-    function randomSymbol() {
-      return symbols[Math.floor(Math.random() * symbols.length)];
-    }
-
-    function pickWeightedSymbol() {
-      const entries = Object.entries(winRates);
-      const total = entries.reduce((sum, [_, val]) => sum + val, 0);
-      const r = Math.random() * total;
-      let acc = 0;
-      for (let [sym, prob] of entries) {
-        acc += prob;
-        if (r <= acc) return sym;
-      }
-      return randomSymbol();
-    }
-
-    function spin() {
-      if (isSpinning || remainingSpins <= 0) return;
-      isSpinning = true;
-      remainingSpins--;
-      spinCountText.textContent = remainingSpins;
-
-      resultLabel.textContent = '🎰 슬롯 머신 🎰';
-      resultLabel.style.color = 'white';
-      resultLabel.style.textShadow = '0 0 10px white';
-
-      let s1, s2, s3;
-      if (Math.random() < 0.51) {
-        s1 = s2 = s3 = pickWeightedSymbol();
-      } else {
-        do {
-          s1 = randomSymbol();
-          s2 = randomSymbol();
-          s3 = randomSymbol();
-        } while (s1 === s2 && s2 === s3);
-      }
-      const result = s1 + s2 + s3;
-
-      let rewardText = '꽝';
-      if (s1 === s2 && s2 === s3) {
-        switch (s1) {
-          case '♣': rewardText = '하프-백'; break;
-          case '♦': rewardText = '더블'; break;
-          case '♥': rewardText = '트리플'; break;
-          case '7': rewardText = '럭키 세븐'; break;
-          case '♠': rewardText = '잭팟'; break;
-        }
-      }
-
-      postResult(rewardText);
-
-      let spins = 0;
-      const interval = setInterval(() => {
-        slotEls.forEach(el => el.textContent = randomSymbol());
-        if (++spins >= 100) {
-          clearInterval(interval);
-          showFinalResult(s1, s2, s3, result, rewardText);
-        }
-      }, 50);
-    }
-
-    function showFinalResult(s1, s2, s3, result, rewardText) {
-      slotEls[0].textContent = s1;
-      slotEls[1].textContent = s2;
-      slotEls[2].textContent = s3;
-    
-      if (s1 === s2 && s2 === s3) {
-        resultLabel.style.color = 'gold';
-        resultLabel.style.textShadow = '0 0 10px gold';
-        slotEls.forEach(el => el.classList.add('highlight'));
-      } else {
-        resultLabel.style.color = 'white';
-        resultLabel.style.textShadow = '0 0 10px white';
-        slotEls.forEach(el => el.classList.remove('highlight'));
-      }
-    
-      resultLabel.textContent = rewardText;
-      addToHistory(result, s1 === s2 && s2 === s3);
-
-      setTimeout(() => {
-        isSpinning = false;
-        spinBtn.disabled = remainingSpins <= 0;
-      }, 700);
-    }
-
-    function addToHistory(result, isWin) {
-      const div = document.createElement('div');
-      div.className = 'entry';
-      div.textContent = result;
-      if (isWin) div.classList.add('highlight');
-      if (history.children.length >= 20) {
-        history.removeChild(history.firstChild);
-      }
-      history.appendChild(div);
-    }
-
-    spinBtn.addEventListener('click', spin);
-    loadSpinCount();
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
