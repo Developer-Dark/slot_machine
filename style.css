@@ -1,61 +1,176 @@
+/* 폰트 및 기본 세팅 */
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700&display=swap');
 
+:root {
+  --bg-color: #0d1117;
+  --card-bg: #161b22;
+  --border-color: #30363d;
+  --accent-blue: #58a6ff;
+  --accent-red: #f85149;
+  --text-gray: #8b949e;
+}
+
 body {
-  background: #0d1117; color: #fff; margin: 0;
-  display: flex; justify-content: center; min-height: 100vh;
-  font-family: 'Pretendard', sans-serif;
+  background: var(--bg-color);
+  color: #fff;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+  font-family: 'Pretendard', -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
-.app { width: 100%; max-width: 380px; padding: 20px 15px; box-sizing: border-box; }
+.app {
+  width: 100%;
+  max-width: 400px;
+  padding: 20px 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
 
-/* ID 폰트 및 크기 보강 */
-#playerIdText { font-family: 'JetBrains Mono', monospace; font-size: 19px; color: #58a6ff; }
-.id-wrapper { display: flex; align-items: center; gap: 8px; margin-top: 4px; }
+/* 1. 상단 바 (사진 속 레이아웃) */
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--card-bg);
+  padding: 14px 18px;
+  border-radius: 16px;
+  border: 1px solid var(--border-color);
+}
 
-/* [버튼] 입체감 제거 및 플랫 & 웨이브 스타일 */
+.id-section { display: flex; align-items: center; gap: 8px; }
+.id-section .label { color: var(--text-gray); font-size: 11px; font-weight: bold; }
+#playerIdText { font-family: 'JetBrains Mono'; color: var(--accent-blue); font-size: 15px; }
+
+#copyBtn {
+  background: #21262d;
+  color: #c9d1d9;
+  border: 1px solid var(--border-color);
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+/* 2. 메인 슬롯 카드 */
+.card.main {
+  background: var(--card-bg);
+  border-radius: 28px;
+  padding: 30px 24px;
+  border: 1px solid var(--border-color);
+  text-align: center;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+}
+
+#result { 
+  margin: 0 0 25px 0; 
+  font-size: 26px; 
+  font-weight: 800; 
+  color: #ffd700; /* 잭팟 강조 색상 */
+  text-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+}
+
+.slots { display: flex; gap: 10px; margin-bottom: 25px; }
+.slot {
+  flex: 1;
+  height: 110px;
+  background: #010409;
+  border-radius: 18px;
+  overflow: hidden;
+  position: relative;
+  border: 2px solid var(--border-color);
+}
+
+.symbol { height: 110px; display: flex; align-items: center; justify-content: center; font-size: 48px; }
+
+/* 3. 버튼 및 웨이브 애니메이션 */
+.button-group { display: flex; flex-direction: column; gap: 10px; }
+
 .wave-btn {
-  position: relative; overflow: hidden;
-  width: 100%; border: none; border-radius: 16px;
-  font-weight: 800; font-size: 18px; cursor: pointer;
-  background: #58a6ff; color: #fff; padding: 18px;
-  transition: background 0.2s, transform 0.1s;
-  box-shadow: none; /* 입체감 제거 */
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  border: none;
+  border-radius: 16px;
+  font-weight: 800;
+  font-size: 18px;
+  padding: 20px;
+  cursor: pointer;
+  background: #4a86ff; /* 토스 블루 */
+  color: #fff;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
-.wave-btn.secondary { background: #21262d; color: #8b949e; border: 1px solid #30363d; font-size: 14px; padding: 14px; }
 
-/* 호버 시 살짝 밝아짐 */
-.wave-btn:hover:not(:disabled) { background: #6cb6ff; }
-.wave-btn:active:not(:disabled) { transform: scale(0.98); }
+.wave-btn.secondary {
+  background: #21262d;
+  color: var(--text-gray);
+  font-size: 15px;
+  padding: 16px;
+}
 
-/* 파동(Wave) 애니메이션 */
+.wave-btn:active { transform: scale(0.97); }
+
+/* 클릭 파동 연출 */
 .btn-wave {
-  position: absolute; background: rgba(255, 255, 255, 0.3);
-  transform: translate(-50%, -50%); border-radius: 50%;
-  pointer-events: none; animation: wave-spread 0.6s ease-out;
+  position: absolute;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: wave-spread 0.6s ease-out;
 }
+
 @keyframes wave-spread {
   from { width: 0; height: 0; opacity: 0.6; }
-  to { width: 600px; height: 600px; opacity: 0; }
+  to { width: 500px; height: 500px; opacity: 0; }
 }
 
-/* [히스토리] 심볼별 연출 */
-.entry { display: flex; justify-content: space-between; padding: 14px; border-radius: 12px; margin-bottom: 8px; background: #1c2128; border-left: 4px solid transparent; }
-
-/* 잭팟: 연한 프리즘/무지개 느낌 */
-.entry.jackpot {
-  background: linear-gradient(120deg, #f0f4ff, #fff0f5, #f0fff4);
-  color: #222; font-weight: 800;
-  box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+/* 4. 하단 시스템 모니터 (사진 하단 디자인) */
+.stats-card {
+  background: var(--card-bg);
+  border-radius: 24px;
+  padding: 20px;
+  border: 1px solid var(--border-color);
 }
-.entry.seven { border-left-color: #ff7b7b; color: #ff7b7b; }
-.entry.normal { border-left-color: #58a6ff; }
-.entry.lose { border-left-color: #30363d; color: #484f58; }
 
-/* 기존 레이아웃 유지용 */
-.card.main { background: #161b22; border-radius: 28px; padding: 24px; border: 1px solid #30363d; text-align: center; margin-bottom: 20px; }
-.slots { display: flex; gap: 8px; margin-bottom: 24px; }
-.slot { flex: 1; height: 100px; background: #010409; border-radius: 16px; overflow: hidden; position: relative; border: 2px solid #30363d; }
-.symbol { height: 100px; display: flex; align-items: center; justify-content: center; font-size: 42px; }
-.stats-area { background: #161b22; border-radius: 24px; padding: 20px; border: 1px solid #30363d; }
+.stats-header {
+  font-size: 11px;
+  color: var(--text-gray);
+  margin-bottom: 16px;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
 .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-.stat-item .value { font-family: 'JetBrains Mono'; font-size: 16px; font-weight: 800; }
+
+.stat-item {
+  background: #0d1117;
+  padding: 15px 5px;
+  border-radius: 14px;
+  text-align: center;
+  border: 1px solid var(--border-color);
+}
+
+.stat-item .label { font-size: 10px; color: var(--text-gray); }
+.stat-item .value {
+  display: block;
+  font-family: 'JetBrains Mono';
+  font-size: 15px;
+  margin-top: 6px;
+  font-weight: 800;
+}
+
+.highlight { color: var(--accent-blue); }
+.diff-plus { color: var(--accent-red); }
+
+/* 5. 히스토리 잭팟 프리즘 효과 */
+.entry.jackpot {
+  background: linear-gradient(135deg, #f0f4ff, #fff0f5, #f0fff4);
+  color: #111 !important;
+  font-weight: 800;
+  border: none;
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
+}
