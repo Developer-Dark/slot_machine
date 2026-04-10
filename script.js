@@ -2,7 +2,7 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzy_vS1mHaLfj3DinkFx
 
 const CONFIG = {
   TARGET_RTP: 92.0,
-  BASE_WIN_RATE: 0.42, // 당첨 확률을 42%로 상향 (체감 성능 개선)
+  BASE_WIN_RATE: 0.42, 
   SYMBOLS_DATA: {
     '♠': { name: '잭팟', weight: 0.004, payout: 50 },
     '7': { name: '럭키 세븐', weight: 0.031, payout: 15 },
@@ -75,7 +75,7 @@ async function spin() {
     reel.style.transform = 'translateY(0)';
     setTimeout(() => {
       reel.style.transition = `transform ${2 + i * 0.4}s cubic-bezier(0.1, 0, 0.1, 1)`;
-      reel.style.transform = `translateY(-3900px)`; // (40-1)*100
+      reel.style.transform = `translateY(-3510px)`; // 높이 90px 기준 (40-1)*90
     }, 50);
   });
 
@@ -89,13 +89,13 @@ async function spin() {
     updateStatsUI();
     addHistory(finalSymbols.join(' '), reward.name, reward.payout > 0);
     
-    try {
-      await fetch(SCRIPT_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: `id=${playerId}&result=${encodeURIComponent(reward.name)}`
-      });
-    } catch(e) {}
+    // 비동기 전송 (결과 기록)
+    fetch(SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors', // CORS 정책 우회 (중요)
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: `id=${playerId}&result=${encodeURIComponent(reward.name)}`
+    }).catch(e => console.warn("기록 전송 실패(무시가능):", e));
     
     isSpinning = false;
     document.getElementById('spin-btn').disabled = (remainingSpins <= 0);
@@ -109,16 +109,29 @@ function addHistory(symbols, reward, isWin) {
   document.getElementById('history').prepend(div);
 }
 
+// 데이터 로드 시 타임아웃 및 캐시 방지 적용
 async function loadData() {
   const btn = document.getElementById('spin-btn');
   try {
-    const res = await fetch(`${SCRIPT_URL}?id=${playerId}`);
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000); // 5초 타임아웃
+
+    const res = await fetch(`${SCRIPT_URL}?id=${playerId}&t=${Date.now()}`, {
+      method: 'GET',
+      signal: controller.signal
+    });
+    
+    clearTimeout(timeoutId);
     const data = await res.json();
+    
     remainingSpins = data.spins || 0;
     document.getElementById('spinCountText').textContent = remainingSpins;
     btn.textContent = "SPIN";
     btn.disabled = (remainingSpins <= 0);
-  } catch (e) { btn.textContent = "연결 오류"; }
+  } catch (e) { 
+    console.error("Connection Error:", e);
+    btn.textContent = "연결 오류"; 
+  }
 }
 
 document.getElementById('spin-btn').onclick = spin;
@@ -128,10 +141,10 @@ document.getElementById('copyBtn').onclick = () => {
   navigator.clipboard.writeText(playerId).then(() => alert('ID 복사됨'));
 };
 
-// 초기화
 (function init() {
   for(let i=1; i<=3; i++) {
     const r = document.getElementById('reel'+i);
+    r.innerHTML = ''; // 초기화
     for(let j=0; j<40; j++) {
       const d = document.createElement('div');
       d.className = 'symbol';
