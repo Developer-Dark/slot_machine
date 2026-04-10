@@ -1,58 +1,51 @@
 :root {
-  --bg: #0f1012;
-  --card: #1c1d21;
+  --bg: #050505;
+  --card: #121212;
   --blue: #3182f6;
-  --text: #f9fafb;
-  --sub: #8b949e;
-  --border: #2c2d31;
+  --accent: #00ff88; /* 비트코인 상승장 느낌의 그린 */
+  --text: #ffffff;
+  --sub: #707070;
+  --border: #222222;
 }
 
-body { background: var(--bg); color: var(--text); margin: 0; font-family: -apple-system, sans-serif; }
+body { background: var(--bg); color: var(--text); margin: 0; font-family: 'Inter', sans-serif; letter-spacing: -0.5px; }
 
-/* 상단 상태바 */
-.status-bar { display: flex; justify-content: space-between; padding: 15px 20px; border-bottom: 1px solid var(--border); background: var(--bg); }
-.label { display: block; font-size: 10px; color: var(--sub); font-weight: bold; margin-bottom: 2px; }
-.status-bar strong { font-family: monospace; font-size: 14px; }
+/* 월렛 상단바 */
+.wallet-bar { display: flex; justify-content: space-between; align-items: center; padding: 25px 20px; border-bottom: 1px solid var(--border); }
+.label { display: block; font-size: 10px; color: var(--sub); font-weight: 800; margin-bottom: 5px; }
+.balance-info strong { font-size: 24px; color: var(--accent); }
+.unit { font-size: 12px; color: var(--sub); margin-left: 4px; }
+.id-info { font-family: monospace; color: var(--sub); font-size: 12px; }
 
 .app { width: 100%; max-width: 400px; margin: 0 auto; padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 15px; }
 
-.header h1 { font-size: 24px; margin: 10px 0 5px; }
-.header p { color: var(--sub); font-size: 15px; margin: 0; }
+.card { background: var(--card); border-radius: 20px; padding: 24px; border: 1px solid var(--border); }
 
-.card { background: var(--card); border-radius: 24px; padding: 20px; border: 1px solid var(--border); }
-
-/* 슬롯 디자인 */
-#result-text { font-weight: bold; color: var(--blue); margin-bottom: 15px; text-align: center; }
-.slots { display: flex; gap: 10px; justify-content: center; margin-bottom: 20px; }
-.slot { width: 85px; height: 110px; background: #000; border-radius: 16px; overflow: hidden; position: relative; border: 1px solid var(--border); }
+/* 슬롯 유닛 */
+#status-tag { display: inline-block; background: #222; padding: 4px 10px; border-radius: 6px; font-size: 10px; font-weight: 900; color: var(--accent); margin-bottom: 20px; }
+.slots { display: flex; gap: 12px; justify-content: center; margin-bottom: 30px; }
+.slot { width: 90px; height: 120px; background: #000; border-radius: 12px; overflow: hidden; position: relative; border: 1px solid #333; }
 .reel { position: absolute; width: 100%; top: 0; }
-.symbol { height: 110px; display: flex; align-items: center; justify-content: center; font-size: 45px; }
+.symbol { height: 120px; display: flex; align-items: center; justify-content: center; font-size: 50px; }
 
-#spin-btn { width: 100%; padding: 18px; border: none; border-radius: 16px; background: var(--blue); color: #fff; font-size: 17px; font-weight: bold; cursor: pointer; }
-#spin-btn:disabled { background: #2c2d31; color: #4e5968; }
+/* 베팅 컨트롤 */
+.bet-control { display: flex; align-items: center; gap: 15px; border-top: 1px solid var(--border); pt: 20px; padding-top: 20px; }
+.bet-info { flex: 1; }
+#spin-btn { flex: 1.5; padding: 18px; border: none; border-radius: 14px; background: var(--blue); color: #fff; font-size: 16px; font-weight: 900; cursor: pointer; transition: 0.2s; }
+#spin-btn:active { transform: scale(0.95); }
+#spin-btn:disabled { background: #222; color: #444; }
 
-/* 통계 그리드 */
+/* 로그 및 기타 */
 .stats-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-.stats-grid { display: flex; justify-content: space-between; background: #111214; padding: 15px; border-radius: 16px; margin-bottom: 15px; }
-.stat-item { font-size: 13px; color: var(--sub); }
-.stat-item b { display: block; color: var(--text); font-size: 16px; margin-top: 2px; }
+.stats-box { display: flex; gap: 20px; background: #000; padding: 15px; border-radius: 12px; }
+.stat { flex: 1; }
+.id-copy-btn { background: none; border: 1px solid var(--border); color: var(--sub); padding: 10px; border-radius: 10px; cursor: pointer; font-size: 12px; }
 
-.sub-btn { width: 100%; background: #2c2d31; border: none; padding: 12px; border-radius: 12px; color: var(--text); font-size: 13px; cursor: pointer; }
-.text-btn { background: none; border: none; color: var(--blue); font-weight: bold; cursor: pointer; }
-
-/* 모달 & 스크롤바 */
-.modal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 100; display: flex; align-items: flex-end; }
-.hidden { display: none; }
-.modal-content { background: var(--card); width: 100%; border-radius: 24px 24px 0 0; padding: 25px; }
-.history-list { max-height: 300px; overflow-y: auto; }
-.history-list::-webkit-scrollbar { width: 4px; }
-.history-list::-webkit-scrollbar-thumb { background: #3e4046; border-radius: 10px; }
-
-/* 당첨 효과 */
+/* 화려한 잭팟 효과 */
 .win-overlay { position: fixed; inset: 0; transition: 0.5s; pointer-events: none; z-index: 50; }
-body.celebrate .win-overlay { background: rgba(49, 130, 246, 0.2); }
-@keyframes jackpot {
-  from { transform: scale(1); text-shadow: 0 0 10px var(--blue); }
-  to { transform: scale(1.1); text-shadow: 0 0 30px var(--blue); }
+body.jackpot-win .win-overlay { background: radial-gradient(circle, rgba(0, 255, 136, 0.2) 0%, rgba(0,0,0,0.8) 100%); }
+@keyframes glow {
+  from { filter: drop-shadow(0 0 5px var(--accent)); transform: scale(1); }
+  to { filter: drop-shadow(0 0 20px var(--accent)); transform: scale(1.15); }
 }
-.jackpot-active .symbol { animation: jackpot 0.4s infinite alternate; }
+.jackpot-active .symbol { animation: glow 0.3s infinite alternate; }
