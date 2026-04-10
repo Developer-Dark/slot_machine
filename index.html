@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>슬롯 시뮬레이터</title>
+  <title>슬롯 머신</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -12,10 +12,11 @@
   <div class="app">
     <header class="header">
       <h1>행운의 스핀</h1>
-      <p>오늘의 잭팟을 노려보세요!</p>
+      <p>가볍게 즐기는 슬롯 머신</p>
     </header>
 
-    <div class="card spin-card" id="main-card">
+    <div class="card main-card" id="main-card">
+      <div id="result-text">기회를 잡으세요!</div>
       <div class="slots">
         <div class="slot"><div class="reel" id="reel1"></div></div>
         <div class="slot"><div class="reel" id="reel2"></div></div>
@@ -24,30 +25,29 @@
       <button id="spin-btn" disabled>데이터 불러오는 중...</button>
     </div>
 
-    <div class="info-section">
-      <div class="card tiny-card">
+    <div class="info-row">
+      <div class="card half-card">
         <span class="label">ID</span>
-        <div class="id-row">
-          <strong id="playerIdText"></strong>
-          <button class="text-btn" id="copyBtn">복사</button>
+        <div class="id-box">
+          <span id="playerIdText"></span>
+          <button id="copyBtn" class="text-btn">복사</button>
         </div>
       </div>
-      
-      <div class="card tiny-card">
-        <span class="label">남은 스핀</span>
-        <strong><span id="spinCountText">-</span>회</strong>
+      <div class="card half-card">
+        <span class="label">남은 기회</span>
+        <strong id="spinCountText">0</strong>
       </div>
     </div>
 
     <div class="card stats-card">
-      <div class="stats-header">
+      <div class="stats-top">
         <h3>RTP 통계</h3>
-        <button class="text-btn" id="history-btn">기록 보기</button>
+        <button id="history-btn" class="text-btn">기록 보기</button>
       </div>
-      <div class="stats-grid">
-        <div class="stat-item">목표 <span>92%</span></div>
-        <div class="stat-item">실제 <span id="actualRtp">0%</span></div>
-        <div class="stat-item">오차 <span id="rtpDiff">0%</span></div>
+      <div class="stats-box">
+        <div class="stat"><span class="label">목표</span> 92%</div>
+        <div class="stat"><span class="label">실제</span> <b id="actualRtp">0%</b></div>
+        <div class="stat"><span class="label">오차</span> <b id="rtpDiff">0%</b></div>
       </div>
     </div>
   </div>
@@ -58,7 +58,7 @@
         <h2>당첨 기록</h2>
         <button id="closeHistory" class="close-btn">&times;</button>
       </div>
-      <div class="history-list" id="history"></div>
+      <div id="history" class="history-list"></div>
     </div>
   </div>
 
