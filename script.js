@@ -1,4 +1,4 @@
-const SCRIPT_URL = '여기에_GAS_URL'; // GAS 배포 주소 입력
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx5fXtx23w-17rK-7_qb9WKH3XjHmMxOrPhfO28blTx25d-FLwaZpMBRKTeB9aIP8-W5g/exec'; // GAS 배포 주소 입력
 const CONFIG = {
   SYMBOLS: ['♠', '7', '♥', '♦', '♣'],
   PAYOUTS: { '♠': 100.0, '7': 25.0, '♥': 10.0, '♦': 5.0, '♣': 1.0 }
