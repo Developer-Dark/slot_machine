@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>CRYPTO SLOT SIMULATOR</title>
+  <title>CRYPTO SLOT SYSTEM</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -12,16 +12,17 @@
   <div class="app">
     <header class="wallet-bar">
       <div class="balance-info">
-        <span class="label">MY BALANCE</span>
+        <span class="label">TOTAL ASSETS</span>
         <strong id="balanceText">0.00</strong> <span class="unit">CREDIT</span>
       </div>
       <div class="id-info">
-        <span id="playerIdText"></span>
+        <span class="label">WALLET ID</span>
+        <span id="playerIdText">---</span>
       </div>
     </header>
 
     <div class="card main-card" id="main-card">
-      <div id="status-tag">SYSTEM READY</div>
+      <div id="status-tag">SYSTEM ONLINE</div>
       <div class="slots">
         <div class="slot"><div class="reel" id="reel1"></div></div>
         <div class="slot"><div class="reel" id="reel2"></div></div>
@@ -30,24 +31,24 @@
       
       <div class="bet-control">
         <div class="bet-info">
-          <span class="label">SPIN COST</span>
-          <strong>1.00 CREDIT</strong>
+          <span class="label">EST. COST</span>
+          <strong>1.00 <small>CR</small></strong>
         </div>
-        <button id="spin-btn" disabled>LOADING...</button>
+        <button id="spin-btn" disabled>INITIALIZING...</button>
       </div>
     </div>
 
     <div class="card stats-card">
       <div class="stats-top">
         <h3>TRADE HISTORY</h3>
-        <button id="history-btn" class="text-btn">LOGS</button>
+        <button id="history-btn" class="text-btn">VIEW LOGS</button>
       </div>
       <div class="stats-box">
-        <div class="stat"><span class="label">REMAINING SPINS</span> <b id="spinCountText">0</b></div>
+        <div class="stat"><span class="label">REMAINING</span> <b id="spinCountText">0</b></div>
         <div class="stat"><span class="label">WIN RATE</span> <b id="actualRtp">0%</b></div>
       </div>
     </div>
-    <button id="copyBtn" class="id-copy-btn">COPY WALLET ID</button>
+    <button id="copyBtn" class="id-copy-btn">COPY WALLET IDENTIFIER</button>
   </div>
 
   <div id="historyModal" class="modal hidden">
