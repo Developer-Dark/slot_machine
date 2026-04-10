@@ -1,79 +1,67 @@
-/* 기본 레이아웃 및 폰트 */
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700&display=swap');
+
 body {
-  background: #0d0e12;
-  color: #fff;
-  margin: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
+  background: #0d1117; color: #fff; margin: 0;
+  display: flex; justify-content: center; min-height: 100vh;
   font-family: 'Pretendard', -apple-system, sans-serif;
   overflow-x: hidden;
 }
 
-.app { width: 100%; max-width: 400px; padding: 20px; z-index: 10; }
+.app { width: 100%; max-width: 400px; padding: 20px 15px; box-sizing: border-box; }
 
-/* 상단바 */
-.top-bar { display: flex; justify-content: space-between; align-items: center; background: #1B1E27; padding: 12px 16px; border-radius: 16px; margin-bottom: 20px; border: 1px solid #2d323e; }
-.id-row { display: flex; align-items: center; gap: 8px; background: #232734; padding: 6px 12px; border-radius: 10px; }
-.id-label { color: #6c7282; font-size: 11px; font-weight: bold; }
-#playerIdText { color: #4F7CFF; font-family: monospace; font-size: 14px; }
-.copy-btn { background: #3d4250; color: #eee; border: none; padding: 4px 8px; border-radius: 6px; font-size: 11px; cursor: pointer; transition: 0.2s; }
-.copy-btn:hover { background: #4F7CFF; }
-
-/* 슬롯 본체 */
-.card.main { 
-  background: #1B1E27; border-radius: 28px; padding: 30px 20px; text-align: center; 
-  box-shadow: 0 20px 50px rgba(0,0,0,0.6); position: relative; 
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+/* ID 섹션 보강 */
+.id-wrapper { display: flex; align-items: center; gap: 10px; margin-top: 4px; }
+#playerIdText { 
+  font-family: 'JetBrains Mono', monospace; /* 코딩 폰트로 가독성/전문성 상향 */
+  font-size: 18px; color: #58a6ff; letter-spacing: -0.5px;
 }
-#result { margin-top: 0; color: #4F7CFF; font-size: 26px; min-height: 1.2em; transition: 0.3s; font-weight: 800; }
+.copy-action-btn {
+  background: #21262d; color: #8b949e; border: 1px solid #30363d;
+  padding: 4px 10px; border-radius: 8px; font-size: 11px; cursor: pointer;
+  transition: all 0.2s;
+}
+.copy-action-btn:hover { background: #30363d; color: #fff; }
 
-.slots { display: flex; gap: 10px; margin: 25px 0; }
-.slot { flex: 1; height: 120px; background: #050505; border-radius: 16px; overflow: hidden; position: relative; border: 2px solid #2D323E; transition: 0.4s; }
-.reel { position: absolute; width: 100%; top: 0; transition: transform 2.5s cubic-bezier(0.1, 0, 0.1, 1); }
-.symbol { height: 120px; display: flex; align-items: center; justify-content: center; font-size: 50px; }
+/* 버튼 웨이브(Ripple) 효과 및 호버 애니메이션 */
+.toss-btn {
+  position: relative; overflow: hidden; /* 웨이브가 밖으로 나가지 않게 함 */
+  width: 100%; border: none; border-radius: 16px; font-weight: 800; 
+  cursor: pointer; transition: background 0.3s, transform 0.2s cubic-bezier(0.2, 0, 0, 1);
+  box-shadow: none; /* 입체감 제거 */
+}
 
-/* 버튼 애니메이션 */
-button { width: 100%; padding: 16px; border: none; border-radius: 14px; font-weight: bold; cursor: pointer; transition: all 0.2s ease; outline: none; }
-#spin-btn { background: #4F7CFF; color: white; margin-bottom: 12px; font-size: 18px; box-shadow: 0 4px 0px #2a55d1; }
-#spin-btn:hover:not(:disabled) { background: #668bff; transform: translateY(-2px); box-shadow: 0 6px 0px #2a55d1; }
-#spin-btn:active:not(:disabled) { transform: translateY(2px); box-shadow: 0 0px 0px #2a55d1; }
-#spin-btn:disabled { background: #323743; color: #6c7282; box-shadow: none; cursor: wait; }
-#history-btn { background: #232734; color: #888; border: 1px solid transparent; }
+/* 호버 시 살짝 커지는 애니메이션 */
+.toss-btn:hover:not(:disabled) { background: #79c0ff; transform: scale(1.02); }
+.toss-btn:active:not(:disabled) { transform: scale(0.98); }
 
-/* 통계 대시보드 UI */
-.stats-card { margin-top: 20px; background: #1B1E27; border-radius: 24px; padding: 20px; border: 1px solid #2d323e; }
-.stats-header { font-size: 13px; font-weight: bold; color: #6c7282; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 0.5px; }
-.stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 15px; }
-.stat-item { background: #0d0e12; padding: 12px 8px; border-radius: 14px; text-align: center; }
-.stat-item .label { display: block; font-size: 10px; color: #6c7282; margin-bottom: 4px; }
-.stat-item .value { font-size: 14px; font-weight: bold; color: #4F7CFF; }
-.prob-list { display: flex; flex-wrap: wrap; gap: 6px; padding-top: 10px; border-top: 1px solid #2d323e; }
-.prob-tag { font-size: 10px; background: #232734; padding: 4px 8px; border-radius: 6px; color: #aaa; }
-.diff-plus { color: #ff4f4f !important; } /* 유저 유리 */
-.diff-minus { color: #4fff84 !important; } /* 시스템 유리 */
+#spin-btn { padding: 20px; background: #58a6ff; color: #fff; font-size: 18px; }
+.toss-btn.secondary { background: #21262d; color: #c9d1d9; border: 1px solid #30363d; margin-top: 15px; padding: 14px; }
 
-/* 모달 및 히스토리 */
-.modal { position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: flex; justify-content: center; align-items: center; z-index: 1000; }
-.hidden { display: none; }
-.modal-content { width: 85%; max-width: 340px; background: #1B1E27; padding: 30px 24px; border-radius: 28px; border: 1px solid #3d4250; }
-.modal-header { font-size: 22px; font-weight: 900; margin-bottom: 25px; color: #fff; }
-.history { display: flex; flex-direction: column; gap: 12px; max-height: 350px; overflow-y: auto; padding-right: 8px; }
-.history::-webkit-scrollbar { width: 4px; }
-.history::-webkit-scrollbar-track { background: transparent; }
-.history::-webkit-scrollbar-thumb { background: #323743; border-radius: 10px; }
-.entry { background: #0F1116; padding: 15px; border-radius: 12px; font-size: 18px; font-weight: 800; display: flex; justify-content: space-between; border-left: 4px solid #4F7CFF; }
-.entry.win { border-left-color: #FFD700; background: #242116; }
+/* 웨이브(리플) 소스 */
+.ripple {
+  position: absolute; background: rgba(255, 255, 255, 0.3);
+  border-radius: 50%; transform: scale(0);
+  animation: ripple-animation 0.6s linear; pointer-events: none;
+}
+@keyframes ripple-animation {
+  to { transform: scale(4); opacity: 0; }
+}
 
-/* 등급별 애니메이션 */
-.win-normal { animation: shake 0.4s ease-in-out; }
-.win-normal #result { color: #4F7CFF; text-shadow: 0 0 20px rgba(79, 124, 255, 0.8); }
-.win-high { animation: bounce 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-.win-high #result { color: #ff9d00; text-shadow: 0 0 30px rgba(255, 157, 0, 0.8); }
-.win-jackpot { animation: jackpot-glow 1s infinite alternate; }
-.win-jackpot #result { color: #FFD700; text-shadow: 0 0 40px rgba(255, 215, 0, 1); font-size: 30px; }
+/* RTP 통계 및 확률 리스트 디자인 보강 */
+.stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+.stat-item .value { font-size: 16px; font-weight: 800; font-family: 'JetBrains Mono'; }
+.stat-item .value.active { color: #58a6ff; }
 
-@keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
-@keyframes bounce { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1.05); } }
-@keyframes jackpot-glow { from { filter: brightness(1); transform: scale(1.03); } to { filter: brightness(1.4); transform: scale(1.06); } }
+.prob-container {
+  background: #0d1117; border-radius: 14px; padding: 15px; border: 1px solid #21262d;
+}
+.prob-title { font-size: 11px; color: #484f58; font-weight: 800; margin-bottom: 10px; text-transform: uppercase; }
+.prob-grid { display: flex; flex-direction: column; gap: 8px; }
+.prob-row { display: flex; justify-content: space-between; font-size: 12px; color: #8b949e; }
+.prob-row b { color: #c9d1d9; font-family: 'JetBrains Mono'; }
+
+/* 기존 카드 스타일 유지 */
+.card.main { background: #161b22; border-radius: 28px; padding: 24px; border: 1px solid #30363d; text-align: center; }
+.slots { display: flex; gap: 8px; margin-bottom: 24px; }
+.slot { flex: 1; height: 100px; background: #010409; border-radius: 16px; overflow: hidden; position: relative; border: 2px solid #30363d; }
+.symbol { height: 100px; display: flex; align-items: center; justify-content: center; font-size: 42px; }
