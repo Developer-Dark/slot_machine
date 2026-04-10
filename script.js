@@ -4,11 +4,11 @@ const CONFIG = {
   TARGET_RTP: 98.5, // 환수율 상향
   BASE_WIN_RATE: 0.44, 
   SYMBOLS_DATA: {
-    '♠': { name: '잭팟', weight: 0.0015, payout: 100, class: 'jackpot' }, // 잭팟 확률 낮춤
-    '7': { name: '럭키 세븐', weight: 0.04, payout: 15, class: 'seven' },
-    '♥': { name: '트리플', weight: 0.12, payout: 5, class: 'normal' },
-    '♦': { name: '더블', weight: 0.25, payout: 2, class: 'normal' },
-    '♣': { name: '하프-백', weight: 0.5885, payout: 0.5, class: 'normal' }
+    '♠': { name: '잭팟', weight: 0.0015, payout: 100 }, // 확률 낮춤, 배당 상향
+    '7': { name: '럭키 세븐', weight: 0.04, payout: 15 },
+    '♥': { name: '트리플', weight: 0.12, payout: 5 },
+    '♦': { name: '더블', weight: 0.25, payout: 2 },
+    '♣': { name: '하프-백', weight: 0.5885, payout: 0.5 }
   }
 };
 
@@ -17,12 +17,11 @@ let stats = { totalSpent: 0, totalWon: 0 };
 let remainingSpins = 0;
 let isSpinning = false;
 
-// 유저 ID 설정
 let playerId = localStorage.getItem('playerId') || Math.random().toString(36).substring(2, 9);
 localStorage.setItem('playerId', playerId);
 document.getElementById('playerIdText').textContent = playerId;
 
-// 파동 효과 함수
+// 파동 효과 함수 추가
 function createWave(e) {
   const btn = e.currentTarget;
   const wave = document.createElement('span');
@@ -43,8 +42,8 @@ function updateStatsUI() {
   diffEl.style.color = Math.abs(diff) < 2 ? '#fff' : (diff > 0 ? '#f85149' : '#3fb950');
 }
 
-async function spin(e) {
-  createWave(e); // 클릭 시 파동 발생
+async function spin(e) { // e 추가
+  createWave(e); // 파동 효과 실행
   if (isSpinning || remainingSpins <= 0) return;
   isSpinning = true;
   remainingSpins--;
@@ -52,10 +51,10 @@ async function spin(e) {
   
   document.getElementById('spinCountText').textContent = remainingSpins;
   document.getElementById('spin-btn').disabled = true;
-  document.getElementById('result').textContent = "연산 중...";
+  document.getElementById('result').textContent = "행운을 빕니다!";
 
   const isWin = Math.random() < CONFIG.BASE_WIN_RATE;
-  let finalSymbols = [], reward = { name: '꽝', payout: 0, sym: '', class: 'lose' };
+  let finalSymbols = [], reward = { name: '꽝', payout: 0, sym: '' };
 
   if (isWin) {
     let r = Math.random(), acc = 0;
@@ -85,7 +84,9 @@ async function spin(e) {
     stats.totalWon += reward.payout;
     document.getElementById('result').textContent = reward.name;
     updateStatsUI();
-    addHistory(finalSymbols.join(' '), reward.name, reward.class);
+    
+    // 잭팟 여부에 따라 클래스 전달
+    addHistory(finalSymbols.join(' '), reward.name, reward.payout > 0, reward.name === '잭팟');
     
     fetch(SCRIPT_URL, {
       method: 'POST',
@@ -98,9 +99,11 @@ async function spin(e) {
   }, 1500); 
 }
 
-function addHistory(symbols, reward, rewardClass) {
+function addHistory(symbols, reward, isWin, isJackpot) {
   const div = document.createElement('div');
-  div.className = `entry ${rewardClass}`;
+  div.className = `entry ${isWin ? 'win' : ''} ${isJackpot ? 'entry-jackpot' : ''}`;
+  div.style.cssText = "background:#0d1117; padding:12px; border-radius:10px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; border-left:4px solid #30363d;";
+  if(isWin && !isJackpot) div.style.borderLeftColor = "#f9c33d";
   div.innerHTML = `<span>${symbols}</span><strong>${reward}</strong>`;
   document.getElementById('history').prepend(div);
 }
