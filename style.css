@@ -3,65 +3,66 @@
 body {
   background: #0d1117; color: #fff; margin: 0;
   display: flex; justify-content: center; min-height: 100vh;
-  font-family: 'Pretendard', -apple-system, sans-serif;
-  overflow-x: hidden;
+  font-family: 'Pretendard', sans-serif;
 }
 
-.app { width: 100%; max-width: 400px; padding: 20px 15px; box-sizing: border-box; }
+.app { width: 100%; max-width: 380px; padding: 20px 15px; box-sizing: border-box; }
 
-/* ID 섹션 보강 */
-.id-wrapper { display: flex; align-items: center; gap: 10px; margin-top: 4px; }
-#playerIdText { 
-  font-family: 'JetBrains Mono', monospace; /* 코딩 폰트로 가독성/전문성 상향 */
-  font-size: 18px; color: #58a6ff; letter-spacing: -0.5px;
-}
-.copy-action-btn {
-  background: #21262d; color: #8b949e; border: 1px solid #30363d;
-  padding: 4px 10px; border-radius: 8px; font-size: 11px; cursor: pointer;
-  transition: all 0.2s;
-}
-.copy-action-btn:hover { background: #30363d; color: #fff; }
+/* ID 및 텍스트 보강 */
+.id-box { display: flex; align-items: center; gap: 8px; margin-top: 4px; }
+#playerIdText { font-family: 'JetBrains Mono', monospace; font-size: 18px; color: #58a6ff; }
+.sub-action { background: #21262d; color: #8b949e; border: 1px solid #30363d; padding: 4px 8px; border-radius: 6px; font-size: 11px; cursor: pointer; }
 
-/* 버튼 웨이브(Ripple) 효과 및 호버 애니메이션 */
-.toss-btn {
-  position: relative; overflow: hidden; /* 웨이브가 밖으로 나가지 않게 함 */
-  width: 100%; border: none; border-radius: 16px; font-weight: 800; 
-  cursor: pointer; transition: background 0.3s, transform 0.2s cubic-bezier(0.2, 0, 0, 1);
-  box-shadow: none; /* 입체감 제거 */
+/* 플랫 버튼 & 웨이브(Wave) 효과 */
+.wave-btn {
+  position: relative; overflow: hidden;
+  width: 100%; border: none; border-radius: 16px;
+  font-weight: 800; font-size: 17px; cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  background: #58a6ff; color: #fff; padding: 18px;
 }
 
-/* 호버 시 살짝 커지는 애니메이션 */
-.toss-btn:hover:not(:disabled) { background: #79c0ff; transform: scale(1.02); }
-.toss-btn:active:not(:disabled) { transform: scale(0.98); }
+.wave-btn.secondary { background: #21262d; color: #c9d1d9; border: 1px solid #30363d; margin-top: 15px; }
 
-#spin-btn { padding: 20px; background: #58a6ff; color: #fff; font-size: 18px; }
-.toss-btn.secondary { background: #21262d; color: #c9d1d9; border: 1px solid #30363d; margin-top: 15px; padding: 14px; }
+/* 호버 애니메이션 */
+.wave-btn:hover:not(:disabled) { background: #4b8cd6; transform: translateY(-1px); }
+.wave-btn:disabled { background: #161b22; color: #484f58; cursor: not-allowed; }
 
-/* 웨이브(리플) 소스 */
-.ripple {
-  position: absolute; background: rgba(255, 255, 255, 0.3);
-  border-radius: 50%; transform: scale(0);
-  animation: ripple-animation 0.6s linear; pointer-events: none;
+/* 웨이브 연출 */
+.btn-wave {
+  position: absolute; background: rgba(255, 255, 255, 0.2);
+  transform: translate(-50%, -50%); pointer-events: none;
+  border-radius: 50%; animation: wave-spread 0.6s ease-out;
 }
-@keyframes ripple-animation {
-  to { transform: scale(4); opacity: 0; }
+@keyframes wave-spread {
+  from { width: 0; height: 0; opacity: 0.5; }
+  to { width: 500px; height: 500px; opacity: 0; }
 }
 
-/* RTP 통계 및 확률 리스트 디자인 보강 */
-.stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
-.stat-item .value { font-size: 16px; font-weight: 800; font-family: 'JetBrains Mono'; }
-.stat-item .value.active { color: #58a6ff; }
+/* 히스토리 아이템 심볼별 색상 (연한 프리즘/파스텔 느낌) */
+.entry { display: flex; justify-content: space-between; padding: 12px; border-radius: 12px; margin-bottom: 8px; font-size: 14px; background: #161b22; }
+.entry.jackpot { background: linear-gradient(135deg, #e3f2fd, #f3e5f5, #fff3e0); color: #333; font-weight: 800; border: none; }
+.entry.seven { border-left: 4px solid #ff6b6b; color: #ff6b6b; }
+.entry.normal { border-left: 4px solid #58a6ff; }
+.entry.lose { border-left: 4px solid #30363d; color: #484f58; }
 
-.prob-container {
-  background: #0d1117; border-radius: 14px; padding: 15px; border: 1px solid #21262d;
-}
-.prob-title { font-size: 11px; color: #484f58; font-weight: 800; margin-bottom: 10px; text-transform: uppercase; }
-.prob-grid { display: flex; flex-direction: column; gap: 8px; }
-.prob-row { display: flex; justify-content: space-between; font-size: 12px; color: #8b949e; }
-.prob-row b { color: #c9d1d9; font-family: 'JetBrains Mono'; }
-
-/* 기존 카드 스타일 유지 */
+/* 메인 슬롯 UI */
 .card.main { background: #161b22; border-radius: 28px; padding: 24px; border: 1px solid #30363d; text-align: center; }
 .slots { display: flex; gap: 8px; margin-bottom: 24px; }
 .slot { flex: 1; height: 100px; background: #010409; border-radius: 16px; overflow: hidden; position: relative; border: 2px solid #30363d; }
 .symbol { height: 100px; display: flex; align-items: center; justify-content: center; font-size: 42px; }
+.reel { position: absolute; width: 100%; top: 0; transition: transform 1.2s cubic-bezier(0.45, 0.05, 0.55, 0.95); }
+
+/* 통계 영역 */
+.stats-area { margin-top: 20px; background: #161b22; border-radius: 24px; padding: 20px; border: 1px solid #30363d; }
+.stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.stat-item { text-align: center; }
+.stat-item .label { display: block; font-size: 10px; color: #8b949e; margin-bottom: 5px; }
+.stat-item .value { font-family: 'JetBrains Mono'; font-size: 15px; font-weight: 800; }
+.highlight { color: #58a6ff; }
+
+/* 모달 */
+.modal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: flex; justify-content: center; align-items: center; z-index: 1000; }
+.hidden { display: none; }
+.modal-content { background: #0d1117; width: 85%; max-width: 340px; padding: 20px; border-radius: 24px; border: 1px solid #30363d; }
+.history-list { max-height: 300px; overflow-y: auto; margin: 15px 0; }
