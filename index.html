@@ -3,12 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>🎰 Data-Driven Slot Machine</title>
+  <title>🎰 Premium Slot Simulator</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div id="win-overlay" class="win-overlay"></div>
-
   <div class="app">
     <div class="top-bar">
       <div class="top-item id-row">
@@ -16,7 +14,7 @@
         <strong id="playerIdText"></strong>
         <button class="copy-btn" id="copyBtn">복사</button>
       </div>
-      <div class="top-item" id="spinContainer">
+      <div class="top-item">
         남은 스핀 : <span id="spinCountText">-</span>
       </div>
     </div>
@@ -35,18 +33,18 @@
     </div>
 
     <div class="stats-card">
-      <div class="stats-header">📊 실시간 시스템 상태</div>
+      <div class="stats-header">📊 SYSTEM MONITOR</div>
       <div class="stats-grid">
         <div class="stat-item">
           <span class="label">기대 환수율</span>
-          <span class="value" id="targetRtp">92%</span>
+          <span class="value">92%</span>
         </div>
         <div class="stat-item">
           <span class="label">실제 환수율</span>
           <span class="value" id="actualRtp">0%</span>
         </div>
         <div class="stat-item">
-          <span class="label">환수율 오차</span>
+          <span class="label">RTP 오차</span>
           <span class="value" id="rtpDiff">0%</span>
         </div>
       </div>
