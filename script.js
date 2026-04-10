@@ -1,4 +1,4 @@
-const SCRIPT_URL = '여기에_배포한_GAS_URL을_넣으세요';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx5fXtx23w-17rK-7_qb9WKH3XjHmMxOrPhfO28blTx25d-FLwaZpMBRKTeB9aIP8-W5g/exec';
 
 const CONFIG = {
   SYMBOLS: ['♠', '7', '♥', '♦', '♣'],
