@@ -3,69 +3,42 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>RTP ANALYSIS SYSTEM</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <link rel="stylesheet" href="style.css" />
+  <title>SLOT SIMULATOR</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div id="win-overlay" class="win-overlay"></div>
-
   <div class="app">
-    <header class="monitor-header">
-      <div class="status-group">
-        <span class="dot-icon"></span>
-        <span class="status-text">LIVE MONITORING</span>
-      </div>
-      <div class="id-display">ID: <span id="playerIdText">---</span></div>
-    </header>
-
-    <div class="card graph-card">
-      <div class="card-header">
-        <span class="label">RTP VOLATILITY (실시간 환수율 변동)</span>
-        <strong id="actualRtpText">0.0%</strong>
-      </div>
-      <div class="chart-container">
-        <canvas id="rtpChart"></canvas>
-      </div>
+    <div class="status-bar">
+      <div class="id-tag">ID: <span id="playerIdText">---</span></div>
+      <div class="rtp-tag">RTP: <span id="actualRtpText">0%</span></div>
     </div>
 
-    <div class="card slot-card" id="main-card">
-      <div class="slot-status">
-        <span id="spinCountText">0</span>회 남음 / <span id="balanceText">0.00</span> 자산
+    <div class="main-card">
+      <div class="info-row">
+        <span class="label">REMAINING SPINS</span>
+        <strong id="spinCountText">0</strong>
       </div>
-      <div class="slots">
+
+      <div class="slot-area">
         <div class="slot"><div class="reel" id="reel1"></div></div>
         <div class="slot"><div class="reel" id="reel2"></div></div>
         <div class="slot"><div class="reel" id="reel3"></div></div>
       </div>
-      <button id="spin-btn" disabled>데이터 분석 시작</button>
+
+      <button id="spin-btn" disabled>CONNECTING...</button>
     </div>
 
-    <div class="card data-grid">
-      <div class="data-item">
-        <span class="label">TARGET RTP</span>
-        <b>92.0%</b>
-      </div>
-      <div class="data-item">
-        <span class="label">TOTAL SPENT</span>
-        <b id="totalSpentText">0</b>
-      </div>
-      <div class="data-item">
-        <span class="label">CURRENT PAYOUT</span>
-        <b id="totalWonText">0</b>
-      </div>
-    </div>
-
-    <div class="footer-actions">
-      <button id="history-btn" class="secondary-btn">LOGS</button>
-      <button id="copyBtn" class="secondary-btn">COPY ID</button>
+    <div class="action-bar">
+      <button id="history-btn">LOGS</button>
+      <button id="copyBtn">COPY ID</button>
     </div>
   </div>
 
   <div id="historyModal" class="modal hidden">
     <div class="modal-content">
       <div class="modal-header">
-        <h2>ANALYSIS LOG</h2>
-        <button id="closeHistory" class="close-btn">&times;</button>
+        <span>HISTORY</span>
+        <button id="closeHistory">&times;</button>
       </div>
       <div id="history" class="history-list"></div>
     </div>
