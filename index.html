@@ -28,23 +28,23 @@
       </div>
       <div class="button-group">
         <button id="spin-btn" disabled>데이터 불러오는 중...</button>
-        <button id="history-btn">HISTORY</button>
+        <button id="history-btn">기록</button>
       </div>
     </div>
 
     <div class="stats-card">
-      <div class="stats-header">룰렛 통계</div>
+      <div class="stats-header">RTP 통계</div>
       <div class="stats-grid">
         <div class="stat-item">
-          <span class="label">기대 환수율</span>
+          <span class="label">기대 RTP</span>
           <span class="value">98.5%</span>
         </div>
         <div class="stat-item">
-          <span class="label">실제 환수율</span>
+          <span class="label">실제 RTP</span>
           <span class="value" id="actualRtp">0%</span>
         </div>
         <div class="stat-item">
-          <span class="label">환수율 오차</span>
+          <span class="label">RTP 오차</span>
           <span class="value" id="rtpDiff">0%</span>
         </div>
       </div>
@@ -59,6 +59,8 @@
       <button id="closeHistory" class="modal-close-btn">닫기</button>
     </div>
   </div>
+
+  <div id="flash" class="flash"></div>
 
   <script src="script.js"></script>
 </body>
