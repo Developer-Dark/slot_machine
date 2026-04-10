@@ -2,25 +2,14 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzQtB2pdgdblOpevAcE2
 
 // [RTP 시스템 설정] 환수율 기댓값 92% 모델
 const CONFIG = {
-  TARGET_RTP: 90, // 일반 게임 환수율 목표 (잭팟 제외)
-  BASE_WIN_RATE: 0.4, // 유저 요청: 40% 당첨 확률
+  TARGET_RTP: 90, 
+  BASE_WIN_RATE: 0.4, 
   SYMBOLS_DATA: {
-    // ♠ 잭팟: 약 0.01% 확률 (10,000번 중 1번꼴)
-    // 당첨 시 서버에서 관리하는 jackpotPool을 지급
     '♠': { name: '잭팟', weight: 0.00025, payout: 0 }, 
-    
-    // 7 럭키 세븐: 1.6% 확률 (15배 - 가끔 터지는 중박)
-    '7': { name: '럭키 세븐', weight: 0.04, payout: 15 }, 
-    
-    // ♥ 트리플: 4% 확률 (5배 - 기분 좋은 당첨)
-    '♥': { name: '트리플', weight: 0.10, payout: 5 },    
-    
-    // ♦ 더블: 10% 확률 (2배 - 자금 방어의 핵심)
-    '♦': { name: '더블', weight: 0.25, payout: 2 },      
-    
-    // ♣ 하프-백: 약 24.3% 확률 (1배 - 본전 유지)
-    // 당첨 빈도의 절반 이상을 본전으로 채워 체류 시간 증대
-    '♣': { name: '하프-백', weight: 0.60975, payout: 1 } 
+    '7': { name: '럭키 세븐', weight: 0.03, payout: 15 }, // 가중치 소폭 하향 (0.04 -> 0.03)
+    '♥': { name: '트리플', weight: 0.08, payout: 5 },   // 가중치 소폭 하향 (0.10 -> 0.08)
+    '♦': { name: '더블', weight: 0.24, payout: 2 },     // 가중치 소폭 하향 (0.25 -> 0.24)
+    '♣': { name: '하프-백', weight: 0.64975, payout: 1 } // 본전 비중 상향
   }
 };
 
