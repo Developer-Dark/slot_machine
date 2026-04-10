@@ -1,38 +1,22 @@
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzQtB2pdgdblOpevAcE2R_rM2iPZC-7rdGp8SVOn7uxYwOrlOZxvsUHt9U7f5SVMIa21w/exec';
 
+/**
+ * [RTP 시스템 설정]
+ * - BASE_WIN_RATE 0.4 (40% 당첨 빈도)
+ * - 하프-백(♣)을 0.5배로 설정함에 따라 유저 자금 방어를 위해 
+ * 7, ♥, ♦의 가중치를 소폭 상향하여 일반 RTP를 92% 수준으로 맞춤.
+ */
 const CONFIG = {
   TARGET_RTP: 92, 
   BASE_WIN_RATE: 0.4, 
   SYMBOLS_DATA: {
-    // ♠ 잭팟: 약 0.01% (배당은 서버 적립금)
-    '♠': { name: '잭팟', weight: 0.00025, payout: 0 }, 
-    
-    // 7 럭키 세븐: 2.8% 확률 (15배 - 이 구간이 환수율을 견인함)
-    '7': { name: '럭키 세븐', weight: 0.07, payout: 15 }, 
-    
-    // ♥ 트리플: 6% 확률 (5배)
-    '♥': { name: '트리플', weight: 0.15, payout: 5 },    
-    
-    // ♦ 더블: 11.2% 확률 (2배)
-    '♦': { name: '더블', weight: 0.28, payout: 2 },      
-    
-    // ♣ 하프-백: 20% 확률 (0.5배 - 유저 요청 반영)
-    // 당첨되어도 시드의 절반만 돌려받으므로 가중치를 적절히 분산함
-    '♣': { name: '하프-백', weight: 0.49975, payout: 0.5 } 
+    '♠': { name: '잭팟', weight: 0.00025, payout: 0 },    // 서버 적립금 지급
+    '7': { name: '럭키 세븐', weight: 0.07, payout: 15 },  // 실제확률 2.8%
+    '♥': { name: '트리플', weight: 0.15, payout: 5 },     // 실제확률 6.0%
+    '♦': { name: '더블', weight: 0.28, payout: 2 },       // 실제확률 11.2%
+    '♣': { name: '하프-백', weight: 0.49975, payout: 0.5 } // 실제확률 20.0%
   }
 };
-
-// const CONFIG = {
-//   TARGET_RTP: 100,
-//   BASE_WIN_RATE: 1,
-//   SYMBOLS_DATA: {
-//     '♠': { name: '잭팟', weight: 1, payout: 0 },
-//     '7': { name: '럭키 세븐', weight: 0, payout: 15 },
-//     '♥': { name: '트리플', weight: 0, payout: 5 },
-//     '♦': { name: '더블', weight: 0, payout: 2 },
-//     '♣': { name: '하프-백', weight: 0, payout: 0.5 }
-//   }
-// };
 
 const SYMBOLS = Object.keys(CONFIG.SYMBOLS_DATA);
 const REEL_SYMBOL_COUNT = 40;
@@ -66,14 +50,18 @@ function updateStatsUI() {
   document.getElementById('actualRtp').textContent = actualRtp.toFixed(1) + '%';
   
   const diffEl = document.getElementById('rtpDiff');
-  diffEl.textContent = (diff > 0 ? '+' : '') + diff.toFixed(1) + '%';
-  diffEl.className = 'value ' + (diff > 0 ? 'diff-plus' : 'diff-minus');
+  if (diffEl) {
+    diffEl.textContent = (diff > 0 ? '+' : '') + diff.toFixed(1) + '%';
+    diffEl.className = 'value ' + (diff > 0 ? 'diff-plus' : 'diff-minus');
+  }
 
   const probList = document.getElementById('probList');
-  probList.innerHTML = Object.entries(CONFIG.SYMBOLS_DATA).map(([sym, data]) => {
-    const realProb = (CONFIG.BASE_WIN_RATE * data.weight * 100).toFixed(2);
-    return `<span class="prob-tag">${sym} ${realProb}%</span>`;
-  }).join('');
+  if (probList) {
+    probList.innerHTML = Object.entries(CONFIG.SYMBOLS_DATA).map(([sym, data]) => {
+      const realProb = (CONFIG.BASE_WIN_RATE * data.weight * 100).toFixed(2);
+      return `<span class="prob-tag">${sym} ${realProb}%</span>`;
+    }).join('');
+  }
 }
 
 // 가중치 기반 심볼 뽑기
@@ -90,6 +78,7 @@ function pickWeightedSymbol() {
 
 function initReels() {
   reels.forEach(reel => {
+    if (!reel) return;
     reel.innerHTML = '';
     for (let i = 0; i < REEL_SYMBOL_COUNT; i++) {
       const div = document.createElement('div');
@@ -115,14 +104,16 @@ async function spin() {
 
   isSpinning = true;
   remainingSpins--;
-  stats.totalSpent += 1; // 1회 스핀 소모 가중치
+  stats.totalSpent += 1; 
   
   spinText.textContent = remainingSpins;
   spinBtn.disabled = true;
+  
+  // 상태 초기화
   mainCard.classList.remove('win-normal', 'win-high', 'win-jackpot');
   resultLabel.textContent = "결과 확인 중...";
 
-  // 결과 미리 결정
+  // 결과 미리 결정 로직
   const isWin = Math.random() < CONFIG.BASE_WIN_RATE;
   let finalSymbols = [];
   let rewardData = { name: '꽝', payout: 0, sym: '' };
@@ -130,14 +121,23 @@ async function spin() {
   if (isWin) {
     const s = pickWeightedSymbol();
     finalSymbols = [s, s, s];
-    rewardData = { name: CONFIG.SYMBOLS_DATA[s].name, payout: CONFIG.SYMBOLS_DATA[s].payout, sym: s };
+    rewardData = { 
+      name: CONFIG.SYMBOLS_DATA[s].name, 
+      payout: CONFIG.SYMBOLS_DATA[s].payout, 
+      sym: s 
+    };
   } else {
+    // 꽝일 때는 서로 다른 심볼 조합 생성
     do {
-      finalSymbols = [SYMBOLS[Math.floor(Math.random()*5)], SYMBOLS[Math.floor(Math.random()*5)], SYMBOLS[Math.floor(Math.random()*5)]];
+      finalSymbols = [
+        SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)], 
+        SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)], 
+        SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)]
+      ];
     } while (finalSymbols[0] === finalSymbols[1] && finalSymbols[1] === finalSymbols[2]);
   }
 
-  // 릴 애니메이션
+  // 릴 애니메이션 실행
   reels.forEach((reel, i) => {
     reel.lastElementChild.textContent = finalSymbols[i];
     reel.style.transition = 'none';
@@ -149,11 +149,13 @@ async function spin() {
     }, 50);
   });
 
-  // 애니메이션 종료 후 처리
+  // 애니메이션 종료 후 처리 (3.2초 후)
   setTimeout(() => {
     stats.totalWon += rewardData.payout;
     resultLabel.textContent = rewardData.name;
     
+    // 🔥 플래시 로직 수정: 당첨(isWin)이면서 배당이 1배 이상일 때만 실행
+    // 하프-백(0.5배)은 당첨이지만 자금이 줄어드는 판이므로 플래시를 터뜨리지 않음
     if (isWin && rewardData.payout >= 1) { 
       const flash = document.getElementById('flash');
       if (flash) {
@@ -161,10 +163,12 @@ async function spin() {
         setTimeout(() => flash.classList.remove('active'), 400);
       }
       
+      // 카드 등급별 효과 적용
       if (rewardData.sym === '♠') mainCard.classList.add('win-jackpot');
       else if (rewardData.sym === '7') mainCard.classList.add('win-high');
       else mainCard.classList.add('win-normal');
     }
+
     updateStatsUI();
     postResult(rewardData.name);
     addHistory(finalSymbols.join(' '), rewardData.name, rewardData.payout > 0);
@@ -194,7 +198,7 @@ async function loadData() {
   } catch (e) { spinBtn.textContent = "연결 오류"; }
 }
 
-// 이벤트 리스너
+// 이벤트 리스너 등록
 spinBtn.onclick = spin;
 document.getElementById('copyBtn').onclick = () => {
   navigator.clipboard.writeText(playerId);
@@ -202,6 +206,7 @@ document.getElementById('copyBtn').onclick = () => {
 document.getElementById('history-btn').onclick = () => document.getElementById('historyModal').classList.remove('hidden');
 document.getElementById('closeHistory').onclick = () => document.getElementById('historyModal').classList.add('hidden');
 
+// 초기화 실행
 initReels();
 updateStatsUI();
 loadData();
