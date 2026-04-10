@@ -20,11 +20,12 @@ function updateStatsUI() {
   document.getElementById('actualRtp').textContent = actualRtp.toFixed(1) + '%';
   const diffEl = document.getElementById('rtpDiff');
   diffEl.textContent = (diff >= 0 ? '+' : '') + diff.toFixed(1) + '%';
-  diffEl.style.color = Math.abs(diff) < 2 ? '#191f28' : (diff > 0 ? '#f04452' : '#3182f6');
+  diffEl.style.color = Math.abs(diff) < 2 ? '#f9fafb' : (diff > 0 ? '#f04452' : '#3182f6');
 }
 
 async function spin() {
   if (isSpinning || remainingSpins <= 0) return;
+  
   isSpinning = true;
   remainingSpins--;
   stats.totalSpent += 1;
@@ -35,6 +36,7 @@ async function spin() {
   document.body.classList.remove('celebrate');
   document.getElementById('main-card').classList.remove('jackpot-active');
 
+  // 당첨 로직
   const isWin = Math.random() < CONFIG.BASE_WIN_RATE;
   let resultSymbols = [], payout = 0, winSymbol = '';
 
@@ -53,18 +55,28 @@ async function spin() {
     } while (resultSymbols[0] === resultSymbols[1] && resultSymbols[1] === resultSymbols[2]);
   }
 
-  // 슬롯 애니메이션 실행
+  // ★ 스핀 애니메이션 핵심 수정 ★
+  const symbolHeight = 110; // CSS와 반드시 일치
+  const totalSymbols = 40;  
+  
   for(let i=1; i<=3; i++) {
     const reel = document.getElementById('reel' + i);
+    // 마지막 심볼(결과값) 교체
     reel.lastElementChild.textContent = resultSymbols[i-1];
+    
+    // 트랜지션 초기화
     reel.style.transition = 'none';
     reel.style.transform = 'translateY(0)';
-    setTimeout(() => {
-      reel.style.transition = `transform ${1 + i*0.2}s cubic-bezier(0.45, 0.05, 0.55, 0.95)`;
-      reel.style.transform = `translateY(-3900px)`; // (40-1) * 100px
-    }, 20);
+    
+    // 리플로우 강제 발생 (브라우저가 위치 초기화를 인식하게 함)
+    reel.offsetHeight; 
+    
+    // 애니메이션 실행
+    reel.style.transition = `transform ${1.2 + i*0.2}s cubic-bezier(0.45, 0.05, 0.55, 0.95)`;
+    reel.style.transform = `translateY(-${(totalSymbols - 1) * symbolHeight}px)`;
   }
 
+  // 결과 처리
   setTimeout(() => {
     stats.totalWon += payout;
     const resultMsg = payout > 0 ? (winSymbol === '♠' ? "JACKPOT! 🎉" : "당첨되었습니다!") : "아쉬워요!";
@@ -74,24 +86,24 @@ async function spin() {
     if (payout > 0) {
       document.body.classList.add('celebrate');
       if (winSymbol === '♠' || winSymbol === '7') document.getElementById('main-card').classList.add('jackpot-active');
-      setTimeout(() => document.body.classList.remove('celebrate'), 2000);
     }
 
+    // 기록 추가
     const div = document.createElement('div');
-    div.className = 'entry';
-    div.style.cssText = "display:flex; justify-content:space-between; padding:12px; border-bottom:1px solid #f2f4f6;";
-    div.innerHTML = `<span>${resultSymbols.join(' ')}</span> <b>${payout > 0 ? payout : '꽝'}</b>`;
+    div.style.cssText = "display:flex; justify-content:space-between; padding:15px; border-bottom:1px solid #2c2d31; font-size:15px;";
+    div.innerHTML = `<span>${resultSymbols.join(' ')}</span> <b style="color:${payout > 0 ? '#3182f6':'#8b949e'}">${payout > 0 ? payout : '꽝'}</b>`;
     document.getElementById('history').prepend(div);
 
     fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: `id=${playerId}&result=${payout}` });
+    
     isSpinning = false;
     document.getElementById('spin-btn').disabled = (remainingSpins <= 0);
-  }, 1800);
+  }, 2000); // i=3일 때 애니메이션이 1.8초에 끝나므로 2초 대기
 }
 
 async function loadData() {
   try {
-    const res = await fetch(`${SCRIPT_URL}?id=${playerId}`);
+    const res = await fetch(`${SCRIPT_URL}?id=${playerId}&t=${Date.now()}`);
     const data = await res.json();
     remainingSpins = data.spins || 0;
     document.getElementById('spinCountText').textContent = remainingSpins;
@@ -112,6 +124,7 @@ document.getElementById('copyBtn').onclick = () => {
 (function init() {
   for(let i=1; i<=3; i++) {
     const r = document.getElementById('reel'+i);
+    r.innerHTML = ''; // 초기화
     for(let j=0; j<40; j++) {
       const d = document.createElement('div');
       d.className = 'symbol';
