@@ -4,7 +4,7 @@ const CONFIG = {
   TARGET_RTP: 98.5, // 환수율 상향
   BASE_WIN_RATE: 0.44, 
   SYMBOLS_DATA: {
-    '♠': { name: 'JACKPOT', weight: 0.0015, payout: 100, class: 'jackpot' }, // 잭팟 확률 하향
+    '♠': { name: '잭팟', weight: 0.0015, payout: 100, class: 'jackpot' }, // 잭팟 확률 낮춤
     '7': { name: '럭키 세븐', weight: 0.04, payout: 15, class: 'seven' },
     '♥': { name: '트리플', weight: 0.12, payout: 5, class: 'normal' },
     '♦': { name: '더블', weight: 0.25, payout: 2, class: 'normal' },
@@ -17,11 +17,12 @@ let stats = { totalSpent: 0, totalWon: 0 };
 let remainingSpins = 0;
 let isSpinning = false;
 
-let playerId = localStorage.getItem('playerId') || Math.random().toString(36).substring(2, 9).toUpperCase();
+// 유저 ID 설정
+let playerId = localStorage.getItem('playerId') || Math.random().toString(36).substring(2, 9);
 localStorage.setItem('playerId', playerId);
 document.getElementById('playerIdText').textContent = playerId;
 
-// 파동 효과 생성 함수
+// 파동 효과 함수
 function createWave(e) {
   const btn = e.currentTarget;
   const wave = document.createElement('span');
@@ -39,16 +40,16 @@ function updateStatsUI() {
   document.getElementById('actualRtp').textContent = actualRtp.toFixed(1) + '%';
   const diffEl = document.getElementById('rtpDiff');
   diffEl.textContent = (diff >= 0 ? '+' : '') + diff.toFixed(1) + '%';
-  diffEl.style.color = Math.abs(diff) < 1.5 ? '#fff' : (diff > 0 ? '#f85149' : '#3fb950');
+  diffEl.style.color = Math.abs(diff) < 2 ? '#fff' : (diff > 0 ? '#f85149' : '#3fb950');
 }
 
 async function spin(e) {
-  createWave(e); // 버튼 클릭 시 파동
+  createWave(e); // 클릭 시 파동 발생
   if (isSpinning || remainingSpins <= 0) return;
-  
   isSpinning = true;
   remainingSpins--;
   stats.totalSpent += 1;
+  
   document.getElementById('spinCountText').textContent = remainingSpins;
   document.getElementById('spin-btn').disabled = true;
   document.getElementById('result').textContent = "연산 중...";
@@ -75,31 +76,32 @@ async function spin(e) {
     reel.style.transition = 'none';
     reel.style.transform = 'translateY(0)';
     setTimeout(() => {
-      reel.style.transition = `transform ${0.8 + (i-1)*0.2}s cubic-bezier(0.2, 0, 0.2, 1)`;
+      reel.style.transition = `transform ${0.8 + (i-1)*0.2}s cubic-bezier(0.25, 0.1, 0.25, 1)`;
       reel.style.transform = `translateY(-3510px)`; 
     }, 20);
   }
 
   setTimeout(async () => {
     stats.totalWon += reward.payout;
-    const resEl = document.getElementById('result');
-    resEl.textContent = reward.name;
-    resEl.style.color = reward.class === 'jackpot' ? '#ffd700' : (reward.payout > 0 ? '#58a6ff' : '#484f58');
-    
+    document.getElementById('result').textContent = reward.name;
     updateStatsUI();
     addHistory(finalSymbols.join(' '), reward.name, reward.class);
     
-    fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: `id=${playerId}&result=${encodeURIComponent(reward.name)}` });
+    fetch(SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      body: `id=${playerId}&result=${encodeURIComponent(reward.name)}`
+    });
 
     isSpinning = false;
     document.getElementById('spin-btn').disabled = (remainingSpins <= 0);
   }, 1500); 
 }
 
-function addHistory(symbols, rewardName, rewardClass) {
+function addHistory(symbols, reward, rewardClass) {
   const div = document.createElement('div');
   div.className = `entry ${rewardClass}`;
-  div.innerHTML = `<span>${symbols}</span><strong>${rewardName}</strong>`;
+  div.innerHTML = `<span>${symbols}</span><strong>${reward}</strong>`;
   document.getElementById('history').prepend(div);
 }
 
@@ -112,7 +114,9 @@ async function loadData() {
     document.getElementById('spinCountText').textContent = remainingSpins;
     btn.textContent = "스핀 돌리기";
     btn.disabled = (remainingSpins <= 0);
-  } catch (e) { btn.textContent = "연결 오류"; }
+  } catch (e) { 
+    btn.textContent = "연결 오류"; 
+  }
 }
 
 document.getElementById('spin-btn').onclick = spin;
@@ -132,8 +136,10 @@ document.getElementById('copyBtn').onclick = () => {
   for(let i=1; i<=3; i++) {
     const r = document.getElementById('reel'+i);
     for(let j=0; j<40; j++) {
-      const d = document.createElement('div'); d.className = 'symbol';
-      d.textContent = SYMBOLS[Math.floor(Math.random()*5)]; r.appendChild(d);
+      const d = document.createElement('div');
+      d.className = 'symbol';
+      d.textContent = SYMBOLS[Math.floor(Math.random()*5)];
+      r.appendChild(d);
     }
   }
   loadData();
