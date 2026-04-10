@@ -7,56 +7,58 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="app">
-    <div class="top-bar">
-      <div class="top-item id-row">
-        <span class="id-label">ID</span>
-        <strong id="playerIdText"></strong>
-        <button class="copy-btn" id="copyBtn">복사</button>
-      </div>
-      <div class="top-item">
-        남은 스핀 : <span id="spinCountText">-</span>회
-      </div>
-    </div>
+  <div id="win-overlay" class="win-overlay"></div>
 
-    <div class="card main" id="main-card">
-      <h2 id="result">슬롯 머신</h2>
+  <div class="app">
+    <header class="header">
+      <h1>행운의 스핀</h1>
+      <p>오늘의 잭팟을 노려보세요!</p>
+    </header>
+
+    <div class="card spin-card" id="main-card">
       <div class="slots">
         <div class="slot"><div class="reel" id="reel1"></div></div>
         <div class="slot"><div class="reel" id="reel2"></div></div>
         <div class="slot"><div class="reel" id="reel3"></div></div>
       </div>
-      <div class="button-group">
-        <button id="spin-btn" disabled>데이터 불러오는 중...</button>
-        <button id="history-btn">기록 보기</button>
+      <button id="spin-btn" disabled>데이터 불러오는 중...</button>
+    </div>
+
+    <div class="info-section">
+      <div class="card tiny-card">
+        <span class="label">ID</span>
+        <div class="id-row">
+          <strong id="playerIdText"></strong>
+          <button class="text-btn" id="copyBtn">복사</button>
+        </div>
+      </div>
+      
+      <div class="card tiny-card">
+        <span class="label">남은 스핀</span>
+        <strong><span id="spinCountText">-</span>회</strong>
       </div>
     </div>
 
-    <div class="stats-card">
-      <div class="stats-header">📊 RTP 통계</div>
-      <div class="stats-grid">
-        <div class="stat-item">
-          <span class="label">목표 RTP</span>
-          <span class="value">92%</span>
-        </div>
-        <div class="stat-item">
-          <span class="label">실제 RTP</span>
-          <span class="value" id="actualRtp">0%</span>
-        </div>
-        <div class="stat-item">
-          <span class="label">RTP 오차</span>
-          <span class="value" id="rtpDiff">0%</span>
-        </div>
+    <div class="card stats-card">
+      <div class="stats-header">
+        <h3>RTP 통계</h3>
+        <button class="text-btn" id="history-btn">기록 보기</button>
       </div>
-      <div class="prob-list" id="probList"></div>
+      <div class="stats-grid">
+        <div class="stat-item">목표 <span>92%</span></div>
+        <div class="stat-item">실제 <span id="actualRtp">0%</span></div>
+        <div class="stat-item">오차 <span id="rtpDiff">0%</span></div>
+      </div>
     </div>
   </div>
 
   <div id="historyModal" class="modal hidden">
     <div class="modal-content">
-      <div class="modal-header">당첨 기록</div>
-      <div class="history" id="history"></div>
-      <button id="closeHistory" class="modal-close-btn">닫기</button>
+      <div class="modal-header">
+        <h2>당첨 기록</h2>
+        <button id="closeHistory" class="close-btn">&times;</button>
+      </div>
+      <div class="history-list" id="history"></div>
     </div>
   </div>
 
