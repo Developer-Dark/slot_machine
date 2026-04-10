@@ -1,14 +1,14 @@
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzy_vS1mHaLfj3DinkFxR3i9azJlYC8AOecbaEBmZMmYkP1LYvOalWyMILjgoyCgAou2A/exec';
 
 const CONFIG = {
-  TARGET_RTP: 98.5, // 98.5%로 상향
-  BASE_WIN_RATE: 0.45, 
+  TARGET_RTP: 98.5, // 기대 환수율 상향
+  BASE_WIN_RATE: 0.44, 
   SYMBOLS_DATA: {
-    '♠': { name: 'JACKPOT', weight: 0.0015, payout: 100, class: 'jackpot' }, // 확률 하향, 배당 상향
+    '♠': { name: 'JACKPOT', weight: 0.001, payout: 100, class: 'jackpot' }, // 잭팟 확률 낮춤
     '7': { name: 'LUCKY 7', weight: 0.04, payout: 15, class: 'seven' },
     '♥': { name: 'TRIPLE', weight: 0.12, payout: 5, class: 'normal' },
     '♦': { name: 'DOUBLE', weight: 0.25, payout: 2, class: 'normal' },
-    '♣': { name: 'HALF', weight: 0.5885, payout: 0.5, class: 'normal' }
+    '♣': { name: 'HALF', weight: 0.589, payout: 0.5, class: 'normal' }
   }
 };
 
@@ -17,12 +17,8 @@ let stats = { totalSpent: 0, totalWon: 0 };
 let remainingSpins = 0;
 let isSpinning = false;
 
-let playerId = localStorage.getItem('playerId') || Math.random().toString(36).substring(2, 9).toUpperCase();
-localStorage.setItem('playerId', playerId);
-document.getElementById('playerIdText').textContent = playerId;
-
-// 버튼 웨이브 효과 함수
-function applyWaveEffect(e) {
+// 웨이브 효과 생성
+function createWave(e) {
   const btn = e.currentTarget;
   const wave = document.createElement('span');
   wave.className = 'btn-wave';
@@ -34,7 +30,7 @@ function applyWaveEffect(e) {
 }
 
 async function spin(e) {
-  applyWaveEffect(e);
+  createWave(e);
   if (isSpinning || remainingSpins <= 0) return;
   
   isSpinning = true;
@@ -66,15 +62,16 @@ async function spin(e) {
     reel.style.transition = 'none';
     reel.style.transform = 'translateY(0)';
     setTimeout(() => {
-      reel.style.transition = `transform ${0.8 + (i-1)*0.2}s cubic-bezier(0.15, 0, 0.15, 1)`;
+      reel.style.transition = `transform ${0.8 + (i-1)*0.2}s cubic-bezier(0.15, 0, 0.1, 1)`;
       reel.style.transform = `translateY(-3900px)`; 
     }, 20);
   }
 
   setTimeout(async () => {
     stats.totalWon += reward.payout;
-    document.getElementById('result').textContent = reward.name;
-    document.getElementById('result').style.color = reward.class === 'jackpot' ? '#ffd700' : '#58a6ff';
+    const resText = document.getElementById('result');
+    resText.textContent = reward.name;
+    resText.style.color = reward.class === 'jackpot' ? '#fff' : (reward.payout > 0 ? '#58a6ff' : '#484f58');
     
     updateStatsUI();
     addHistory(finalSymbols.join(' '), reward.name, reward.class);
@@ -102,42 +99,10 @@ function addHistory(symbols, rewardName, rewardClass) {
   document.getElementById('history').prepend(div);
 }
 
-// 이벤트 바인딩
+// 초기화 및 바인딩
 document.getElementById('spin-btn').onclick = spin;
 document.getElementById('history-btn').onclick = (e) => {
-  applyWaveEffect(e);
+  createWave(e);
   document.getElementById('historyModal').classList.remove('hidden');
 };
-document.getElementById('closeHistory').onclick = (e) => {
-  applyWaveEffect(e);
-  document.getElementById('historyModal').classList.add('hidden');
-};
-document.getElementById('copyBtn').onclick = () => {
-  navigator.clipboard.writeText(playerId).then(() => alert('ID 복사 완료'));
-};
-
-async function loadData() {
-  const btn = document.getElementById('spin-btn');
-  try {
-    const res = await fetch(`${SCRIPT_URL}?id=${playerId}&t=${Date.now()}`);
-    const data = await res.json();
-    remainingSpins = data.spins || 0;
-    document.getElementById('spinCountText').textContent = remainingSpins;
-    btn.textContent = "스프레드 시트 API 데이터 로드 중...";
-    btn.disabled = (remainingSpins <= 0);
-  } catch (e) { btn.textContent = "연결 오류"; }
-}
-
-(function init() {
-  for(let i=1; i<=3; i++) {
-    const r = document.getElementById('reel'+i);
-    for(let j=0; j<40; j++) {
-      const d = document.createElement('div');
-      d.className = 'symbol';
-      d.textContent = SYMBOLS[Math.floor(Math.random()*5)];
-      r.appendChild(d);
-    }
-  }
-  loadData();
-  updateStatsUI();
-})();
+document.getElementById('closeHistory').onclick = () => document.getElementById('historyModal').classList.add('hidden');
