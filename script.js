@@ -3,10 +3,10 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzy_vS1mHaLfj3DinkFx
 // [RTP 시스템 설정] 환수율 기댓값 92% 모델
 const CONFIG = {
   TARGET_RTP: 92,
-  BASE_WIN_RATE: 0.32, // 전체 스핀 중 당첨이 발생할 확률 (32%)
+  BASE_WIN_RATE: 0.42, // 전체 스핀 중 당첨이 발생할 확률 (32%)
   SYMBOLS_DATA: {
-    '♠': { name: '잭팟', weight: 0.005, payout: 50 },    // 실제확률 0.16%
-    '7': { name: '럭키 세븐', weight: 0.035, payout: 15 }, // 실제확률 1.12%
+    '♠': { name: '잭팟', weight: 0.002, payout: 50 },    // 실제확률 0.084%
+    '7': { name: '럭키 세븐', weight: 0.038, payout: 15 }, // 실제확률 1.596%
     '♥': { name: '트리플', weight: 0.12, payout: 5 },    // 실제확률 3.84%
     '♦': { name: '더블', weight: 0.24, payout: 2 },      // 실제확률 7.68%
     '♣': { name: '하프-백', weight: 0.60, payout: 0.5 }   // 실제확률 19.2%
