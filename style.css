@@ -1,4 +1,4 @@
-/* 기존 설정 유지 */
+/* 기본 폰트 및 배경 설정 */
 body {
   background: #0d1117; color: #fff; margin: 0;
   display: flex; justify-content: center; align-items: center;
@@ -41,42 +41,19 @@ body {
 
 .button-group { display: flex; flex-direction: column; gap: 12px; }
 
-/* 버튼: 입체감 제거 및 파동 연출 설정 */
+/* 버튼 디자인 수정: 입체감 제거 및 파동 연출을 위한 overflow 설정 */
 button { 
   width: 100%; padding: 16px; border: none; border-radius: 14px; 
   font-weight: 800; cursor: pointer; transition: 0.1s; font-size: 16px;
-  box-shadow: none !important; /* 입체감 제거 */
-  position: relative; overflow: hidden; /* 파동 연출용 */
+  box-shadow: none; /* 입체감 제거 */
   outline: none; -webkit-appearance: none;
+  position: relative; overflow: hidden; /* 파동 연출용 */
 }
+button:active:not(:disabled) { transform: translateY(1px); }
+
 #spin-btn { background: #58a6ff; color: #fff; }
-#spin-btn:disabled { background: #21262d; color: #484f58; cursor: wait; }
+#spin-btn:disabled { background: #21262d; color: #484f58; box-shadow: none; cursor: wait; }
 #history-btn, .modal-close-btn { background: #30363d; color: #f0f6fc; }
-
-/* 파동(Wave) 애니메이션 */
-.btn-wave {
-  position: absolute; background: rgba(255, 255, 255, 0.3);
-  transform: translate(-50%, -50%); border-radius: 50%;
-  pointer-events: none; animation: wave-spread 0.6s ease-out;
-}
-@keyframes wave-spread {
-  from { width: 0; height: 0; opacity: 0.6; }
-  to { width: 600px; height: 600px; opacity: 0; }
-}
-
-/* 히스토리 연출 */
-.entry {
-  padding: 12px; border-radius: 10px; margin-bottom: 8px; 
-  display: flex; justify-content: space-between; align-items: center;
-  background: #0d1117; border-left: 4px solid #30363d;
-}
-/* 잭팟 프리즘 연출 */
-.entry.jackpot {
-  background: linear-gradient(135deg, #eef2ff, #fdf2f8, #f0fdf4) !important;
-  color: #111 !important; border: none !important;
-}
-.entry.seven { border-left-color: #f85149; color: #f85149; }
-.entry.normal { border-left-color: #58a6ff; }
 
 .stats-card { 
   margin-top: 20px; background: #0d1117; border: 1px solid #30363d; 
@@ -102,3 +79,28 @@ button {
 }
 .modal-header { font-weight: 800; font-size: 18px; margin-bottom: 20px; text-align: center; }
 .history { max-height: 250px; overflow-y: auto; }
+
+/* 잭팟 효과 */
+.win-jackpot #result { color: #ffeb3b; text-shadow: 0 0 20px #ffeb3b; }
+.win-jackpot .slot { border-color: #ffeb3b; animation: glow 0.5s infinite alternate; }
+@keyframes glow { 
+  from { box-shadow: 0 0 5px #ffeb3b; } 
+  to { box-shadow: 0 0 20px #ffeb3b; } 
+}
+
+/* 추가: 파동(Wave) 효과 스타일 */
+.btn-wave {
+  position: absolute; background: rgba(255, 255, 255, 0.4);
+  transform: translate(-50%, -50%); border-radius: 50%;
+  pointer-events: none; animation: wave-spread 0.6s ease-out;
+}
+@keyframes wave-spread {
+  from { width: 0; height: 0; opacity: 1; }
+  to { width: 500px; height: 500px; opacity: 0; }
+}
+
+/* 추가: 잭팟 히스토리 프리즘 연출 */
+.entry-jackpot {
+  background: linear-gradient(135deg, #fdf2f8, #eef2ff, #f0fdf4) !important;
+  color: #111 !important; border-left: none !important;
+}
