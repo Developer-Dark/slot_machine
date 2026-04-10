@@ -3,58 +3,68 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>CRYPTO SLOT SYSTEM</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>RTP ANALYSIS SYSTEM</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div id="win-overlay" class="win-overlay"></div>
 
   <div class="app">
-    <header class="wallet-bar">
-      <div class="balance-info">
-        <span class="label">TOTAL ASSETS</span>
-        <strong id="balanceText">0.00</strong> <span class="unit">CREDIT</span>
+    <header class="monitor-header">
+      <div class="status-group">
+        <span class="dot-icon"></span>
+        <span class="status-text">LIVE MONITORING</span>
       </div>
-      <div class="id-info">
-        <span class="label">WALLET ID</span>
-        <span id="playerIdText">---</span>
-      </div>
+      <div class="id-display">ID: <span id="playerIdText">---</span></div>
     </header>
 
-    <div class="card main-card" id="main-card">
-      <div id="status-tag">SYSTEM ONLINE</div>
+    <div class="card graph-card">
+      <div class="card-header">
+        <span class="label">RTP VOLATILITY (실시간 환수율 변동)</span>
+        <strong id="actualRtpText">0.0%</strong>
+      </div>
+      <div class="chart-container">
+        <canvas id="rtpChart"></canvas>
+      </div>
+    </div>
+
+    <div class="card slot-card" id="main-card">
+      <div class="slot-status">
+        <span id="spinCountText">0</span>회 남음 / <span id="balanceText">0.00</span> 자산
+      </div>
       <div class="slots">
         <div class="slot"><div class="reel" id="reel1"></div></div>
         <div class="slot"><div class="reel" id="reel2"></div></div>
         <div class="slot"><div class="reel" id="reel3"></div></div>
       </div>
-      
-      <div class="bet-control">
-        <div class="bet-info">
-          <span class="label">EST. COST</span>
-          <strong>1.00 <small>CR</small></strong>
-        </div>
-        <button id="spin-btn" disabled>INITIALIZING...</button>
+      <button id="spin-btn" disabled>데이터 분석 시작</button>
+    </div>
+
+    <div class="card data-grid">
+      <div class="data-item">
+        <span class="label">TARGET RTP</span>
+        <b>92.0%</b>
+      </div>
+      <div class="data-item">
+        <span class="label">TOTAL SPENT</span>
+        <b id="totalSpentText">0</b>
+      </div>
+      <div class="data-item">
+        <span class="label">CURRENT PAYOUT</span>
+        <b id="totalWonText">0</b>
       </div>
     </div>
 
-    <div class="card stats-card">
-      <div class="stats-top">
-        <h3>TRADE HISTORY</h3>
-        <button id="history-btn" class="text-btn">VIEW LOGS</button>
-      </div>
-      <div class="stats-box">
-        <div class="stat"><span class="label">REMAINING</span> <b id="spinCountText">0</b></div>
-        <div class="stat"><span class="label">WIN RATE</span> <b id="actualRtp">0%</b></div>
-      </div>
+    <div class="footer-actions">
+      <button id="history-btn" class="secondary-btn">LOGS</button>
+      <button id="copyBtn" class="secondary-btn">COPY ID</button>
     </div>
-    <button id="copyBtn" class="id-copy-btn">COPY WALLET IDENTIFIER</button>
   </div>
 
   <div id="historyModal" class="modal hidden">
     <div class="modal-content">
       <div class="modal-header">
-        <h2>TRANSACTION LOG</h2>
+        <h2>ANALYSIS LOG</h2>
         <button id="closeHistory" class="close-btn">&times;</button>
       </div>
       <div id="history" class="history-list"></div>
