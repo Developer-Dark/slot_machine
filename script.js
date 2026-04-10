@@ -1,27 +1,36 @@
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzQtB2pdgdblOpevAcE2R_rM2iPZC-7rdGp8SVOn7uxYwOrlOZxvsUHt9U7f5SVMIa21w/exec';
 
-// [RTP 시스템 설정] 환수율 기댓값 92% 모델
 const CONFIG = {
-  TARGET_RTP: 90, 
+  TARGET_RTP: 92, 
   BASE_WIN_RATE: 0.4, 
   SYMBOLS_DATA: {
+    // ♠ 잭팟: 약 0.01% (배당은 서버 적립금)
     '♠': { name: '잭팟', weight: 0.00025, payout: 0 }, 
-    '7': { name: '럭키 세븐', weight: 0.03, payout: 15 }, // 가중치 소폭 하향 (0.04 -> 0.03)
-    '♥': { name: '트리플', weight: 0.08, payout: 5 },   // 가중치 소폭 하향 (0.10 -> 0.08)
-    '♦': { name: '더블', weight: 0.24, payout: 2 },     // 가중치 소폭 하향 (0.25 -> 0.24)
-    '♣': { name: '하프-백', weight: 0.64975, payout: 1 } // 본전 비중 상향
+    
+    // 7 럭키 세븐: 2.8% 확률 (15배 - 이 구간이 환수율을 견인함)
+    '7': { name: '럭키 세븐', weight: 0.07, payout: 15 }, 
+    
+    // ♥ 트리플: 6% 확률 (5배)
+    '♥': { name: '트리플', weight: 0.15, payout: 5 },    
+    
+    // ♦ 더블: 11.2% 확률 (2배)
+    '♦': { name: '더블', weight: 0.28, payout: 2 },      
+    
+    // ♣ 하프-백: 20% 확률 (0.5배 - 유저 요청 반영)
+    // 당첨되어도 시드의 절반만 돌려받으므로 가중치를 적절히 분산함
+    '♣': { name: '하프-백', weight: 0.49975, payout: 0.5 } 
   }
 };
 
 // const CONFIG = {
 //   TARGET_RTP: 100,
-//   BASE_WIN_RATE: 1, // 전체 스핀 중 당첨이 발생할 확률 (32%)
+//   BASE_WIN_RATE: 1,
 //   SYMBOLS_DATA: {
-//     '♠': { name: '잭팟', weight: 1, payout: 50 },    // 실제확률 0.16%
-//     '7': { name: '럭키 세븐', weight: 0, payout: 15 }, // 실제확률 1.12%
-//     '♥': { name: '트리플', weight: 0, payout: 5 },    // 실제확률 3.84%
-//     '♦': { name: '더블', weight: 0, payout: 2 },      // 실제확률 7.68%
-//     '♣': { name: '하프-백', weight: 0, payout: 0.5 }   // 실제확률 19.2%
+//     '♠': { name: '잭팟', weight: 1, payout: 50 },
+//     '7': { name: '럭키 세븐', weight: 0, payout: 15 },
+//     '♥': { name: '트리플', weight: 0, payout: 5 },
+//     '♦': { name: '더블', weight: 0, payout: 2 },
+//     '♣': { name: '하프-백', weight: 0, payout: 0.5 }
 //   }
 // };
 
@@ -144,13 +153,12 @@ async function spin() {
   setTimeout(() => {
     stats.totalWon += rewardData.payout;
     resultLabel.textContent = rewardData.name;
-
-    // 🔥 플래시 효과
-    const flash = document.getElementById('flash');
-    flash.classList.add('active');
-    setTimeout(() => flash.classList.remove('active'), 400);
     
     if (rewardData.payout > 0) {
+      const flash = document.getElementById('flash');
+      flash.classList.add('active');
+      setTimeout(() => flash.classList.remove('active'), 400);
+      
       if (rewardData.sym === '♠') mainCard.classList.add('win-jackpot');
       else if (rewardData.sym === '7') mainCard.classList.add('win-high');
       else mainCard.classList.add('win-normal');
