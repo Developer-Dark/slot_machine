@@ -2,22 +2,13 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <title>🎰 Premium Slot Simulator</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="app">
-    <div class="top-bar">
-      <div class="top-item id-row">
-        <span class="id-label">ID</span>
-        <strong id="playerIdText"></strong>
-        <button class="copy-btn" id="copyBtn">복사</button>
-      </div>
-      <div class="top-item">
-        남은 스핀 : <span id="spinCountText">-</span>
-      </div>
-    </div>
+    <div class="machine-header">SYSTEM ONLINE</div>
 
     <div class="card main" id="main-card">
       <h2 id="result">슬롯 머신</h2>
@@ -26,37 +17,61 @@
         <div class="slot"><div class="reel" id="reel2"></div></div>
         <div class="slot"><div class="reel" id="reel3"></div></div>
       </div>
+      
       <div class="button-group">
-        <button id="spin-btn" disabled>데이터 불러오는 중...</button>
-        <button id="history-btn">HISTORY</button>
+        <button id="spin-btn" class="toss-btn" disabled>데이터 불러오는 중...</button>
       </div>
     </div>
 
-    <div class="stats-card">
-      <div class="stats-header">📊 SYSTEM MONITOR</div>
-      <div class="stats-grid">
-        <div class="stat-item">
-          <span class="label">기대 환수율</span>
-          <span class="value">92%</span>
+    <div class="stats-area">
+      <div class="info-bar">
+        <div class="info-item id-section">
+          <span class="label">USER IDENTIFIER</span>
+          <div class="id-wrapper">
+            <strong id="playerIdText">---</strong>
+            <button id="copyBtn" class="copy-action-btn">복사</button>
+          </div>
         </div>
-        <div class="stat-item">
-          <span class="label">실제 환수율</span>
-          <span class="value" id="actualRtp">0%</span>
-        </div>
-        <div class="stat-item">
-          <span class="label">RTP 오차</span>
-          <span class="value" id="rtpDiff">0%</span>
+        <div class="info-item spin-section">
+          <span class="label">SPINS</span>
+          <strong id="spinCountText">-</strong>
         </div>
       </div>
-      <div class="prob-list" id="probList"></div>
+
+      <div class="stats-card">
+        <div class="stats-header">RTP 분석 통계</div>
+        <div class="stats-grid">
+          <div class="stat-item">
+            <span class="label">기대 RTP</span>
+            <span class="value">92.0%</span>
+          </div>
+          <div class="stat-item">
+            <span class="label">현재 RTP</span>
+            <span class="value active" id="actualRtp">0.0%</span>
+          </div>
+          <div class="stat-item">
+            <span class="label">RTP 오차</span>
+            <span class="value" id="rtpDiff">0.0%</span>
+          </div>
+        </div>
+        
+        <div class="prob-container">
+          <div class="prob-title">당첨 확률 정보</div>
+          <div id="probList" class="prob-grid"></div>
+        </div>
+      </div>
+
+      <div class="footer-btns">
+        <button id="history-btn" class="toss-btn secondary">기록 보기</button>
+      </div>
     </div>
   </div>
 
   <div id="historyModal" class="modal hidden">
     <div class="modal-content">
-      <div class="modal-header">히스토리</div>
+      <div class="modal-header">기록</div>
       <div class="history" id="history"></div>
-      <button id="closeHistory" class="modal-close-btn">닫기</button>
+      <button id="closeHistory" class="modal-close-btn toss-btn">닫기</button>
     </div>
   </div>
 
