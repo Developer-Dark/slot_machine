@@ -123,7 +123,7 @@ async function loadData() {
     const data = await res.json();
     remainingSpins = data.spins || 0;
     document.getElementById('spinCountText').textContent = remainingSpins;
-    btn.textContent = "분석 시작";
+    btn.textContent = "스프레드 시트 API 데이터 로드 중...";
     btn.disabled = (remainingSpins <= 0);
   } catch (e) { btn.textContent = "연결 오류"; }
 }
