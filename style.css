@@ -34,9 +34,28 @@ button { width: 100%; padding: 16px; border: none; border-radius: 14px; font-wei
 #spin-btn:active:not(:disabled) { transform: translateY(2px); box-shadow: 0 0 0 #1a6328; }
 #spin-btn:disabled { background: #21262d; color: #484f58; box-shadow: none; cursor: wait; }
 
-#history-btn { background: #30363d; color: #f0f6fc; box-shadow: 0 4px 0 #161b22; }
-#history-btn:hover { background: #3c444d; transform: translateY(-2px); box-shadow: 0 6px 0 #161b22; }
-#history-btn:active { transform: translateY(2px); box-shadow: 0 0 0 #161b22; }
+/* --- 히스토리 버튼 및 닫기 버튼 스타일 통합 --- */
+#history-btn, .modal-close-btn { background: #30363d; color: #f0f6fc; border: none; border-radius: 14px; font-weight: 800; cursor: pointer; transition: all 0.2s ease; font-size: 16px; width: 100%; padding: 16px; box-shadow: 0 4px 0 #161b22; }
+
+/* 호버 시 살짝 올라오는 효과 */
+#history-btn:hover, .modal-close-btn:hover {  background: #3c444d;  transform: translateY(-2px);  box-shadow: 0 6px 0 #161b22; }
+
+/* 클릭 시 눌리는 효과 */
+#history-btn:active, .modal-close-btn:active {  transform: translateY(2px);  box-shadow: 0 0px 0 #161b22; }
+
+/* 모달 내부 닫기 버튼 전용 여백 */
+.modal-close-btn { margin-top: 20px; }
+
+/* --- 모달 컨텐츠 내부 여백 조정 --- */
+.modal-content {
+  background: #161b22;
+  width: 90%;
+  max-width: 320px;
+  padding: 24px;
+  border-radius: 24px;
+  border: 1px solid #30363d;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+}
 
 /* 통계 대시보드 */
 .stats-card { margin-top: 20px; background: #0d1117; border: 1px solid #30363d; border-radius: 20px; padding: 16px; }
