@@ -26,7 +26,7 @@ const CONFIG = {
 //   TARGET_RTP: 100,
 //   BASE_WIN_RATE: 1,
 //   SYMBOLS_DATA: {
-//     '♠': { name: '잭팟', weight: 1, payout: 50 },
+//     '♠': { name: '잭팟', weight: 1, payout: 0 },
 //     '7': { name: '럭키 세븐', weight: 0, payout: 15 },
 //     '♥': { name: '트리플', weight: 0, payout: 5 },
 //     '♦': { name: '더블', weight: 0, payout: 2 },
@@ -154,16 +154,17 @@ async function spin() {
     stats.totalWon += rewardData.payout;
     resultLabel.textContent = rewardData.name;
     
-    if (rewardData.payout > 0) {
+    if (isWin && rewardData.payout >= 1) { 
       const flash = document.getElementById('flash');
-      flash.classList.add('active');
-      setTimeout(() => flash.classList.remove('active'), 400);
+      if (flash) {
+        flash.classList.add('active');
+        setTimeout(() => flash.classList.remove('active'), 400);
+      }
       
       if (rewardData.sym === '♠') mainCard.classList.add('win-jackpot');
       else if (rewardData.sym === '7') mainCard.classList.add('win-high');
       else mainCard.classList.add('win-normal');
     }
-
     updateStatsUI();
     postResult(rewardData.name);
     addHistory(finalSymbols.join(' '), rewardData.name, rewardData.payout > 0);
